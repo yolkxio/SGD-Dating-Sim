@@ -1,0 +1,23 @@
+ea4bc82a6ad023ab7ee23ee620429895
+::res://::1750104908
+icon.svg::CompressedTexture2D/CompressedTexture2D::4810510679844369055::1750013524::1750013561::1::::<><><>0<>0<>e78e455df3828e743282a69f3092d1f2<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
+::res://Assets/::1750028284
+::res://Assets/Art/::1750044329
+::res://Assets/Art/Backgrounds/::1750028245
+::res://Assets/Art/Characters/::1750028253
+::res://Assets/Art/UI/::1750044333
+9patch.png::CompressedTexture2D/CompressedTexture2D::4445296506017054645::1750044322::1750044333::1::::<><><>0<>0<>93f15fc8492260ab2855bf99c7eb2da2<>res://.godot/imported/9patch.png-d7e2b975631216a86a736f2ef8ce960b.ctex::
+::res://Assets/Text/::1750046432
+Test Dialogue.txt::TextFile::-1::1750046432::0::1::::<><><>0<>0<><>::
+::res://Fonts/::1750027754
+ThickTestFont.ttf::FontFile/FontFile::6558831081518510105::1750024064::1750027742::1::::<><><>0<>0<>64d09b030dd7fc3f3a53154be4035cd4<>res://.godot/imported/ThickTestFont.ttf-e07b90c0a8e1365687376169e216b95a.fontdata::
+ThinTestFont.ttf::FontFile/FontFile::5818216806154400862::1750024083::1750027754::1::::<><><>0<>0<>2a457cb7ba6e341cb7f6af155c93f12f<>res://.godot/imported/ThinTestFont.ttf-3a3f8d20423c4becff47676d97ea4949.fontdata::
+::res://Scenes/::1750046587
+Screen.tscn::PackedScene::6227279075887577347::1750046587::0::1::::<><><>0<>0<><>::uid://d3nxnxsg34eew::::res://Themes/TestTheme.tres<>uid://bu244lsn5ye7o::::res://Scripts/TestText.gd
+::res://Scripts/::1750045938
+TestText.gd::GDScript::3847748942821862814::1750045938::0::1::::<>Control<><>0<>0<><>::
+::res://Scripts/Classes/::1750046171
+DialogueBase.gd::GDScript::6363026478002413528::1750046171::0::1::::DialogueData<>Resource<><>0<>0<><>::
+::res://Scripts/Resources/::1750045667
+::res://Themes/::1750046358
+TestTheme.tres::Theme::9152807526056086678::1750046358::0::1::::<><><>0<>0<><>::uid://c0pe8wboespth::::res://Fonts/ThickTestFont.ttf<>uid://co5nge7anbeo1::::res://Fonts/ThinTestFont.ttf

@@ -1,0 +1,56 @@
+[gd_scene load_steps=3 format=3 uid="uid://cuysm2kox8jt8"]
+
+[ext_resource type="Theme" uid="uid://d3nxnxsg34eew" path="res://Themes/TestTheme.tres" id="1_4um7d"]
+[ext_resource type="Script" uid="uid://bu244lsn5ye7o" path="res://Scripts/TestText.gd" id="1_q8odg"]
+
+[node name="Screen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_q8odg")
+
+[node name="TestBG" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.466667, 0.243137, 0.384314, 1)
+
+[node name="TextContainer" type="Control" parent="."]
+layout_mode = 1
+anchor_top = 0.75
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="TextBackground" type="Panel" parent="TextContainer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_4um7d")
+
+[node name="MarginContainer" type="MarginContainer" parent="TextContainer/TextBackground"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TextContainer/TextBackground/MarginContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "It's You!"

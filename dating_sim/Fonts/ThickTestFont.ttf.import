@@ -1,0 +1,40 @@
+[remap]
+
+importer="font_data_dynamic"
+type="FontFile"
+uid="uid://c0pe8wboespth"
+path="res://.godot/imported/ThickTestFont.ttf-e07b90c0a8e1365687376169e216b95a.fontdata"
+
+[deps]
+
+source_file="res://Fonts/ThickTestFont.ttf"
+dest_files=["res://.godot/imported/ThickTestFont.ttf-e07b90c0a8e1365687376169e216b95a.fontdata"]
+
+[params]
+
+Rendering=null
+antialiasing=1
+generate_mipmaps=false
+disable_embedded_bitmaps=true
+multichannel_signed_distance_field=false
+msdf_pixel_range=8
+msdf_size=48
+allow_system_fallback=true
+force_autohinter=false
+hinting=1
+subpixel_positioning=4
+keep_rounding_remainders=true
+oversampling=0.0
+Fallbacks=null
+fallbacks=[]
+Compress=null
+compress=true
+preload=[{
+"chars": [],
+"glyphs": [],
+"name": "New Configuration",
+"size": Vector2i(16, 0)
+}]
+language_support={}
+script_support={}
+opentype_features={}
