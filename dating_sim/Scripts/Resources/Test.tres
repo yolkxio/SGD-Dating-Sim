@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="DialogueData" load_steps=2 format=3 uid="uid://drrecr43opomx"]
+
+[ext_resource type="Script" uid="uid://cwwkd7uw3ndoi" path="res://Scripts/Classes/DialogueBase.gd" id="1_2lc6c"]
+
+[resource]
+script = ExtResource("1_2lc6c")
+text_file_path = "res://Assets/Text/Test Dialogue.txt"
+colors = {
+"Background": Color(0.323217, 0.696396, 0.664142, 1),
+"Outline": Color(0, 0, 0, 1),
+"Text": Color(1, 1, 1, 1)
+}
+fonts = {}
+integers = {
+"AddedSpacing": 0,
+"Delay": 0,
+"DelayBetweenCharacters": 0,
+"FontSize": 32,
+"OutlineSize": 0,
+"PauseTimer": 0,
+"TextSpeed": 50
+}
+theme = {}
+metadata/_custom_type_script = "uid://cwwkd7uw3ndoi"
