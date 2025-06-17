@@ -14,11 +14,11 @@ fonts = {}
 integers = {
 "AddedSpacing": 0,
 "Delay": 0,
-"DelayBetweenCharacters": 0,
+"DelayBetweenCharacters": 2,
 "FontSize": 32,
 "OutlineSize": 0,
 "PauseTimer": 0,
-"TextSpeed": 50
+"TextSpeed": 100
 }
 theme = {}
 metadata/_custom_type_script = "uid://cwwkd7uw3ndoi"
