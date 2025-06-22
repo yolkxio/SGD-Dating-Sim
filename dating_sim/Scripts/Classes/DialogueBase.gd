@@ -14,13 +14,14 @@ class_name DialogueData
 }
 
 @export var integers: Dictionary = {
-	"TextSpeed": 50,
+	"TextSpeed": 100,
 	"FontSize": 32,
 	"Delay": 0,
 	"PauseTimer": 0,
 	"DelayBetweenCharacters": 0,
 	"AddedSpacing": 0,
 	"OutlineSize": 0,
+	"RippleFrames": 0,
 }
 
 @export var theme: Dictionary = {

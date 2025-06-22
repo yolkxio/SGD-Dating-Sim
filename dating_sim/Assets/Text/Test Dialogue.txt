@@ -1,2 +1,5 @@
 This is a test Dialogue <>
-test Dialogue Part 2
+[!24, @3]Woah![] this is really something [] <>
+[!24]This is wavy text [@10] now slower [#500] and super slow words [$60]
+PAUSE![] pause test <>
+yup testing that this is back to normal

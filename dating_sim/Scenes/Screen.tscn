@@ -53,11 +53,8 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="RichTextLabel" type="RichTextLabel" parent="TextContainer/TextBackground/MarginContainer"]
+[node name="TextContainer" type="Control" parent="TextContainer/TextBackground/MarginContainer"]
 layout_mode = 2
-theme_override_colors/default_color = Color(0, 0, 0, 1)
-bbcode_enabled = true
-text = "It's You!"
 
 [node name="TextureButton" type="TextureButton" parent="TextContainer"]
 visible = false
