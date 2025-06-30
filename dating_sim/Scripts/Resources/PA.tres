@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=7 format=3 uid="uid://bfxfpkcpwolcg"]
+
+[ext_resource type="Script" uid="uid://bhirb0q308e7m" path="res://Scripts/Classes/CharacterBase.gd" id="1_xq1q5"]
+[ext_resource type="Texture2D" uid="uid://dd5joc123yh27" path="res://Assets/Art/Characters/programmerarthony1.png" id="1_yd68a"]
+[ext_resource type="Texture2D" uid="uid://q1iq6tee62qa" path="res://Assets/Art/Characters/programmerarthony2.png" id="2_j1k4k"]
+[ext_resource type="Texture2D" uid="uid://bn7x820ix5sux" path="res://Assets/Art/Characters/programmerarthony3.png" id="3_x1m1b"]
+[ext_resource type="Texture2D" uid="uid://7fu0pocic2ni" path="res://Assets/Art/Characters/programmerarthony4.png" id="4_jkc0y"]
+[ext_resource type="AudioStream" uid="uid://ovcs65mojsbj" path="res://Assets/Sounds/blipSelect (1).wav" id="5_wpler"]
+
+[resource]
+script = ExtResource("1_xq1q5")
+character_name = "Programmer Arthony"
+character_id = "PA"
+dialogue_text_files = Array[String](["res://Assets/Text/Test Dialogue.txt", "res://Assets/Text/testchoiceA.txt", "res://Assets/Text/testchoiceB.txt"])
+character_images = {
+"four": ExtResource("4_jkc0y"),
+"one": ExtResource("1_yd68a"),
+"three": ExtResource("3_x1m1b"),
+"two": ExtResource("2_j1k4k")
+}
+character_sounds = {
+"talking": ExtResource("5_wpler")
+}
+character_variables = {
+"will talk": true
+}
+metadata/_custom_type_script = "uid://bhirb0q308e7m"

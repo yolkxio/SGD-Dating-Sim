@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3 uid="uid://b4faikeae05u5"]
+
+[ext_resource type="PackedScene" uid="uid://cuysm2kox8jt8" path="res://Scenes/Screen.tscn" id="1_jb6cu"]
+[ext_resource type="Texture2D" uid="uid://dd5joc123yh27" path="res://Assets/Art/Characters/programmerarthony1.png" id="2_sabvf"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Screen" parent="." instance=ExtResource("1_jb6cu")]
+layout_mode = 1
+
+[node name="TextureRect" type="TextureRect" parent="Screen"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -320.0
+offset_right = 320.0
+offset_bottom = 810.0
+grow_horizontal = 2
+texture = ExtResource("2_sabvf")
+
+[editable path="Screen"]

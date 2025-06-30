@@ -1,4 +1,6 @@
 Control
+TextureRect
+ColorRect
 TextureButton
 Button
 RichTextLabel
@@ -6,4 +8,3 @@ Label
 MarginContainer
 Panel
 NinePatchRect
-ColorRect

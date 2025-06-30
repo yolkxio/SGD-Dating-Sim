@@ -1,7 +1,13 @@
 extends Control
 
 @export var dialogue_data: DialogueData
+@export var character_data: CharacterData
 
+var choice_mode: bool = false
+var choice_options: Array = []
+var choice_destinations: Array = []
+var choice_buttons: Array = []
+var choice_container: Control
 var full_dialogue_segments: Array = []
 var current_segment_index: int = 0
 var current_segment_text: String = ""
@@ -21,11 +27,18 @@ var next_text_position: Vector2 = Vector2.ZERO
 var current_ripple_frames: int = 0
 var current_char_delay: int = 0
 var current_word_speed: int = 0
+var in_effect_zone: bool = false
+var current_effect_zone: Dictionary = {}
 var ripple_timer: Timer
 var ripple_positions: Array = []
+var shake_effects: Array = []
+var effect_update_timer: Timer
+var jitter_effects: Array = []
+var wiggle_effects: Array = []
 var icon_button: TextureButton
 
 func _ready():
+	setup_choice_system()
 	typing_system()
 	dialogue_box()
 	connect_button()
@@ -35,11 +48,18 @@ func typing_system():
 	add_child(typing_timer)
 	typing_timer.timeout.connect(_render_timer)
 	typing_timer.wait_time = 0.1
+	
 	ripple_timer = Timer.new()
 	add_child(ripple_timer)
 	ripple_timer.timeout.connect(_ripple_timer)
 	ripple_timer.wait_time = 0.016
 	ripple_timer.start()
+	
+	effect_update_timer = Timer.new()
+	add_child(effect_update_timer)
+	effect_update_timer.timeout.connect(_update_effects)
+	effect_update_timer.wait_time = 0.016
+	effect_update_timer.start()
 
 func dialogue_box():
 	text_container = $TextContainer/TextBackground/MarginContainer/TextContainer
@@ -49,6 +69,14 @@ func connect_button():
 	icon_button = $TextContainer/TextureButton
 	if icon_button:
 		icon_button.pressed.connect(_button)
+
+func setup_choice_system():
+	choice_container = $TextContainer/TextBackground/MarginContainer/ChoiceContainer
+	if choice_container:
+		choice_container.visible = false
+
+func set_character_data(character: CharacterData):
+	character_data = character
 
 func load_text():
 	var file_path = dialogue_data.text_file_path
@@ -61,7 +89,7 @@ func load_text():
 	
 	parse_text(file_content)
 	
-	if full_dialogue_segments.size() > 0:
+	if not choice_mode and full_dialogue_segments.size() > 0:
 		start_next()
 
 func parse_text(content: String):
@@ -72,8 +100,47 @@ func parse_text(content: String):
 	for segment in raw_segments:
 		var cleaned_segment = segment.strip_edges()
 		if cleaned_segment.length() > 0:
-			var parsed_data = find_effects(cleaned_segment)
-			full_dialogue_segments.append(parsed_data)
+			if cleaned_segment.begins_with("<:>"):
+				var choice_data = parse_choice_segment(cleaned_segment)
+				full_dialogue_segments.append(choice_data)
+			else:
+				var parsed_data = find_effects(cleaned_segment)
+				full_dialogue_segments.append(parsed_data)
+
+func parse_choice_segment(choice_segment: String) -> Dictionary:
+	var choice_content = choice_segment.substr(3)
+	choice_options.clear()
+	choice_destinations.clear()
+	var choice_parts = choice_content.split(" ")
+	var prompt_text = ""
+	var collecting_prompt = true
+	
+	for part in choice_parts:
+		if collecting_prompt and not part.contains("<"):
+			prompt_text += part + " "
+		else:
+			collecting_prompt = false
+			var trimmed_part = part.strip_edges()
+			if trimmed_part.length() > 0:
+				var destination_index = -1
+				var choice_text = trimmed_part
+				var regex = RegEx.new()
+				regex.compile("<(\\d+)>")
+				var result = regex.search(trimmed_part)
+				
+				if result:
+					destination_index = result.get_string(1).to_int()
+					choice_text = trimmed_part.replace(result.get_string(0), "").strip_edges()
+				
+				if choice_text.length() > 0:
+					choice_options.append(choice_text)
+					choice_destinations.append(destination_index)
+	
+	return {
+		"text": prompt_text.strip_edges(),
+		"effects": [],
+		"is_choice": true
+	}
 
 func find_effects(segment_text: String) -> Dictionary:
 	var clean_text = ""
@@ -87,12 +154,29 @@ func find_effects(segment_text: String) -> Dictionary:
 			var end_bracket = segment_text.find("]", i)
 			if end_bracket != -1:
 				var effect_content = segment_text.substr(i + 1, end_bracket - i - 1)
-				var new_effects = parse_effects(effect_content)
 				
-				effects_data.append({
-					"position": clean_text.length(),
-					"effects": new_effects
-				})
+				if effect_content.ends_with("{"):
+					var effect_str = effect_content.substr(0, effect_content.length() - 1)
+					var new_effects = parse_effects(effect_str)
+					effects_data.append({
+						"position": clean_text.length(),
+						"effects": new_effects,
+						"type": "start_zone"
+					})
+				elif effect_content == "}":
+					effects_data.append({
+						"position": clean_text.length(),
+						"effects": {},
+						"type": "end_zone"
+					})
+				else:
+					var new_effects = parse_effects(effect_content)
+					effects_data.append({
+						"position": clean_text.length(),
+						"effects": new_effects,
+						"type": "permanent"
+					})
+				
 				i = end_bracket + 1
 				continue
 		
@@ -109,8 +193,12 @@ func parse_effects(effect_str: String) -> Dictionary:
 		"ripple": dialogue_data.integers.get("RippleFrames", 0),
 		"char_delay": dialogue_data.integers.get("DelayBetweenCharacters", 0),
 		"word_speed": dialogue_data.integers.get("TextSpeed", 500),
-		"delay": 0
+		"delay": 0,
+		"jitter": 0,
+		"shake": 0,
+		"wiggle": 0
 	}
+	
 	var effect_parts = effect_str.split(",")
 	if effect_str == "":
 		print("Reset to defaults at position")
@@ -134,10 +222,23 @@ func start_effects(effect_str: String, effects: Dictionary):
 	elif effect_str.begins_with("#"):
 		var number_str = effect_str.substr(1)
 		var speed_value = number_str.to_int()
+		effects["word_speed"] = speed_value
 	elif effect_str.begins_with("$"):
 		var number_str = effect_str.substr(1)
 		var delay_frames = number_str.to_int()
 		effects["delay"] = delay_frames
+	elif effect_str.begins_with("%"):
+		var number_str = effect_str.substr(1)
+		var jitter_intensity = number_str.to_int() if number_str != "" else 2
+		effects["jitter"] = jitter_intensity
+	elif effect_str.begins_with("^"):
+		var number_str = effect_str.substr(1)
+		var shake_frames = number_str.to_int()
+		effects["shake"] = shake_frames
+	elif effect_str.begins_with("&"):
+		var number_str = effect_str.substr(1)
+		var wiggle_intensity = number_str.to_int() if number_str != "" else 5
+		effects["wiggle"] = wiggle_intensity
 
 func delete_rendered():
 	for label in text_labels:
@@ -170,8 +271,14 @@ func start_next():
 	current_char_delay = dialogue_data.integers.get("DelayBetweenCharacters")
 	current_word_speed = dialogue_data.integers.get("TextSpeed")
 	delete_rendered()
-	ripple_positions.clear()
 	is_word_mode = (current_char_delay == 0)
+	in_effect_zone = false
+	current_effect_zone.clear()
+	ripple_positions.clear()
+	jitter_effects.clear()
+	wiggle_effects.clear()
+	shake_effects.clear()
+	
 	if is_word_mode:
 		word_labels()
 	else:
@@ -183,13 +290,35 @@ func start_next():
 		await get_tree().create_timer(initial_wait).timeout
 	typing_timer.start()
 
+func get_char_width(char: String, font_size: int) -> float:
+	var temp_label = Label.new()
+	temp_label.add_theme_font_size_override("font_size", font_size)
+	temp_label.text = char
+	add_child(temp_label)
+	temp_label.force_update_transform()
+	var size = temp_label.get_theme_font("font").get_string_size(char, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
+	remove_child(temp_label)
+	temp_label.queue_free()
+	return size.x
+
+func get_word_width(word: String, font_size: int) -> float:
+	var temp_label = Label.new()
+	temp_label.add_theme_font_size_override("font_size", font_size)
+	temp_label.text = word
+	add_child(temp_label)
+	
+	temp_label.force_update_transform()
+	var size = temp_label.get_theme_font("font").get_string_size(word, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
+	
+	remove_child(temp_label)
+	temp_label.queue_free()
+	return size.x
+
 func character_labels():
 	var x_position = 0.0
 	var y_position = 0.0
 	var font_size = dialogue_data.integers["FontSize"]
 	var line_height = font_size * 1.2
-	var char_width = font_size * 0.7
-	var space_width = font_size * 0.35
 	
 	for i in range(current_segment_text.length()):
 		var char = current_segment_text[i]
@@ -212,22 +341,18 @@ func character_labels():
 		char_label.modulate.a = 0.0
 		text_container.add_child(char_label)
 		text_labels.append(char_label)
-		if char == " ":
-			x_position += space_width
-		else:
-			x_position += char_width
+		
+		var actual_width = get_char_width(char, font_size)
+		x_position += actual_width
 
 func word_labels():
 	var x_position = 0.0
 	var y_position = 0.0
 	var font_size = dialogue_data.integers["FontSize"]
 	var line_height = font_size * 1.2
-	var char_width = font_size * 0.7 
-	var space_width = font_size * 0.35
 	var words = []
 	var word_char_positions = []
 	var current_word = ""
-	var current_char_pos = 0
 	var word_start_pos = 0
 	var i = 0
 	
@@ -256,12 +381,15 @@ func word_labels():
 			current_word += char
 		
 		i += 1
+	
 	if current_word != "":
 		words.append(current_word)
 		word_char_positions.append(word_start_pos)
+	
 	current_segment_word_positions = word_char_positions
 	
-	for word in words:
+	for j in range(words.size()):
+		var word = words[j]
 		if word == "\n":
 			y_position += line_height
 			x_position = 0.0
@@ -278,15 +406,12 @@ func word_labels():
 			word_label.add_theme_color_override("font_outline_color", dialogue_data.get_color("Outline"))
 		
 		word_label.position = Vector2(x_position, y_position)
-		word_label.modulate.a = 0.0  # Start invisible
+		word_label.modulate.a = 0.0
 		text_container.add_child(word_label)
 		text_labels.append(word_label)
 		
-		if word == " ":
-			x_position += space_width
-		else:
-			var word_width = word.length() * char_width
-			x_position += word_width
+		var actual_width = get_word_width(word, font_size)
+		x_position += actual_width
 
 func typing_speed():
 	var effective_char_delay = current_char_delay if current_char_delay > 0 else dialogue_data.integers["DelayBetweenCharacters"]
@@ -311,34 +436,43 @@ func effects_apply_wm():
 		return
 	
 	var word_char_position = current_segment_word_positions[current_word_index]
-	var effect_applied = false
 	
 	for effect_change in current_segment_effects:
 		if effect_change.position == word_char_position:
-			var old_ripple = current_ripple_frames
-			var old_char_delay = current_char_delay
-			var old_word_speed = current_word_speed
-			current_ripple_frames = effect_change.effects.get("ripple", dialogue_data.integers.get("RippleFrames"))
-			current_char_delay = effect_change.effects.get("char_delay", dialogue_data.integers.get("DelayBetweenCharacters"))
-			current_word_speed = effect_change.effects.get("word_speed", dialogue_data.integers.get("TextSpeed"))
+			var effect_type = effect_change.get("type", "permanent")
+			
+			if effect_type == "start_zone":
+				in_effect_zone = true
+				current_effect_zone = effect_change.effects.duplicate()
+				# Don't track ripple in zones anymore
+				current_char_delay = current_effect_zone.get("char_delay", current_char_delay)
+				current_word_speed = current_effect_zone.get("word_speed", current_word_speed)
+			elif effect_type == "end_zone":
+				in_effect_zone = false
+				current_effect_zone.clear()
+				# Don't clear ripple effects here - let them finish naturally
+			else:
+				# Regular permanent effect - don't track ripple here either
+				current_char_delay = effect_change.effects.get("char_delay", current_char_delay)
+				current_word_speed = effect_change.effects.get("word_speed", current_word_speed)
+			
+			# Handle mode switching
 			var old_mode = is_word_mode
 			var new_mode = (current_char_delay == 0)
-			var delay_frames = effect_change.effects.get("delay")
 			
 			if old_mode != new_mode:
 				wm_switch(new_mode, word_char_position)
 				return
 			
-			if delay_frames > 0:
+			# Handle delays
+			var delay_frames = effect_change.effects.get("delay")
+			if delay_frames != null and delay_frames > 0:
 				var delay_seconds = delay_frames / 60.0
 				typing_timer.stop()
 				call_deferred("delay", delay_seconds)
 				return
 			
-			if old_char_delay != current_char_delay or old_word_speed != current_word_speed:
-				typing_speed()
-			
-			effect_applied = true
+			typing_speed()
 			break
 
 func wm_switch(new_word_mode: bool, current_char_pos: int):
@@ -374,28 +508,47 @@ func wm_switch(new_word_mode: bool, current_char_pos: int):
 func update_effects():
 	for effect_change in current_segment_effects:
 		if effect_change.position == current_position:
-			var old_ripple = current_ripple_frames
-			var old_char_delay = current_char_delay
-			var old_word_speed = current_word_speed
-			current_ripple_frames = effect_change.effects.get("ripple", dialogue_data.integers.get("RippleFrames"))
-			current_char_delay = effect_change.effects.get("char_delay", dialogue_data.integers.get("DelayBetweenCharacters"))
-			current_word_speed = effect_change.effects.get("word_speed", dialogue_data.integers.get("TextSpeed"))
-			var old_mode = is_word_mode
-			var new_mode = (current_char_delay == 0)
+			var effect_type = effect_change.get("type", "permanent")
 			
-			if old_mode != new_mode:
-				rendering_switch(new_mode)
-				return  
-			
-			var delay_frames = effect_change.effects.get("delay", 0)
-			if delay_frames > 0:
-				var delay_seconds = delay_frames / 60.0
-				typing_timer.stop()
-				call_deferred("delay", delay_seconds)
-				return
-			
-			if old_char_delay != current_char_delay or old_word_speed != current_word_speed:
-				typing_speed()
+			if effect_type == "start_zone":
+				in_effect_zone = true
+				current_effect_zone = effect_change.effects.duplicate()
+				current_ripple_frames = current_effect_zone.get("ripple", dialogue_data.integers.get("RippleFrames"))
+				current_char_delay = current_effect_zone.get("char_delay", dialogue_data.integers.get("DelayBetweenCharacters"))
+				current_word_speed = current_effect_zone.get("word_speed", dialogue_data.integers.get("TextSpeed"))
+			elif effect_type == "end_zone":
+				in_effect_zone = false
+				current_effect_zone.clear()
+				ripple_positions.clear()
+				for label in text_labels:
+					if is_instance_valid(label):
+						label.scale = Vector2.ONE
+			else:
+				# Add the missing variable declarations
+				var old_ripple = current_ripple_frames
+				var old_char_delay = current_char_delay
+				var old_word_speed = current_word_speed
+				
+				current_ripple_frames = effect_change.effects.get("ripple", dialogue_data.integers.get("RippleFrames"))
+				current_char_delay = effect_change.effects.get("char_delay", dialogue_data.integers.get("DelayBetweenCharacters"))
+				current_word_speed = effect_change.effects.get("word_speed", dialogue_data.integers.get("TextSpeed"))
+				
+				var old_mode = is_word_mode
+				var new_mode = (current_char_delay == 0)
+				
+				if old_mode != new_mode:
+					rendering_switch(new_mode)
+					return  
+				
+				var delay_frames = effect_change.effects.get("delay", 0)
+				if delay_frames > 0:
+					var delay_seconds = delay_frames / 60.0
+					typing_timer.stop()
+					call_deferred("delay", delay_seconds)
+					return
+				
+				if old_char_delay != current_char_delay or old_word_speed != current_word_speed:
+					typing_speed()
 			
 			break
 
@@ -458,22 +611,8 @@ func calculate_position():
 	
 	if last_visible_label:
 		var font_size = dialogue_data.integers["FontSize"]
-		var char_width = font_size * 0.7
-		var space_width = font_size * 0.35
-		
-		if is_word_mode:
-			var word_text = last_visible_label.text
-			if word_text == " ":
-				next_text_position = last_visible_label.position + Vector2(space_width, 0)
-			else:
-				var word_width = word_text.length() * char_width
-				next_text_position = last_visible_label.position + Vector2(word_width, 0)
-		else:
-			var char_text = last_visible_label.text
-			if char_text == " ":
-				next_text_position = last_visible_label.position + Vector2(space_width, 0)
-			else:
-				next_text_position = last_visible_label.position + Vector2(char_width, 0)
+		var actual_width = get_word_width(last_visible_label.text, font_size)
+		next_text_position = last_visible_label.position + Vector2(actual_width, 0)
 	else:
 		next_text_position = Vector2.ZERO
 
@@ -496,8 +635,6 @@ func cm_fromswitch():
 	var y_position = next_text_position.y
 	var font_size = dialogue_data.integers["FontSize"]
 	var line_height = font_size * 1.2
-	var char_width = font_size * 0.7
-	var space_width = font_size * 0.35
 	
 	for i in range(current_segment_text.length()):
 		var char = current_segment_text[i]
@@ -522,18 +659,14 @@ func cm_fromswitch():
 		text_container.add_child(char_label)
 		text_labels.append(char_label)
 		
-		if char == " ":
-			x_position += space_width
-		else:
-			x_position += char_width
+		var actual_width = get_char_width(char, font_size)
+		x_position += actual_width
 
 func wm_fromswitch():
 	var x_position = next_text_position.x
 	var y_position = next_text_position.y
 	var font_size = dialogue_data.integers["FontSize"]
 	var line_height = font_size * 1.2
-	var char_width = font_size * 0.7
-	var space_width = font_size * 0.35
 	var words = []
 	var word_char_positions = []
 	var current_word = ""
@@ -590,31 +723,29 @@ func wm_fromswitch():
 		text_container.add_child(word_label)
 		text_labels.append(word_label)
 		
-		if word == " ":
-			x_position += space_width
-		else:
-			var word_width = word.length() * char_width
-			x_position += word_width
+		var actual_width = get_word_width(word, font_size)
+		x_position += actual_width
 
 func _render_timer():
 	var effective_char_delay = current_char_delay if current_char_delay > 0 else dialogue_data.integers["DelayBetweenCharacters"]
 	
 	if effective_char_delay > 0 or not is_word_mode:
+		# Character mode rendering
 		if current_position < text_labels.size():
 			update_effects()
 			var char_label = text_labels[current_position]
 			var char = current_segment_text[current_position]
 			char_label.modulate.a = 1.0
-			
-			if char != " " and current_ripple_frames > 0:
-				ripple(current_position, current_ripple_frames)
+			apply_effects_to_current_position(current_position)
 			
 			current_position += 1
 			
 			while current_position < current_segment_text.length() and current_segment_text[current_position] == " ":
 				update_effects()
 				if current_position < text_labels.size():
-					text_labels[current_position].modulate.a = 1.0
+					var space_label = text_labels[current_position]
+					space_label.modulate.a = 1.0
+					apply_effects_to_current_position(current_position)
 				current_position += 1
 		
 		if current_position >= text_labels.size():
@@ -625,16 +756,57 @@ func _render_timer():
 			var word_label = text_labels[current_word_index]
 			var word_text = word_label.text
 			word_label.modulate.a = 1.0
-			if current_ripple_frames > 0 and word_text != " " and word_text != "\n":
-				ripple(current_word_index, current_ripple_frames)
+			apply_effects_to_current_position(current_word_index)
 			
 			current_word_index += 1
 		else:
 			finish_current()
 
-func ripple(position: int, ripple_frames: int):
+func apply_effects_to_current_position(position: int):
+	var text_pos = position
+	if is_word_mode and position < current_segment_word_positions.size():
+		text_pos = current_segment_word_positions[position]
+	
+	var current_ripple_value = 0
+	for effect_change in current_segment_effects:
+		if effect_change.position <= text_pos:
+			if effect_change.get("type") == "start_zone":
+				current_ripple_value = effect_change.effects.get("ripple", 0)
+			elif effect_change.get("type") == "end_zone":
+				current_ripple_value = 0
+			elif effect_change.get("type") == "permanent":
+				current_ripple_value = effect_change.effects.get("ripple", 0)
+	
+	if current_ripple_value > 0 and position < text_labels.size():
+		ripple_targeted(text_labels[position], current_ripple_value)
+	
+	var in_zone = false
+	var zone_jitter = 0
+	var zone_wiggle = 0
+	var zone_shake = 0
+	
+	for effect_change in current_segment_effects:
+		if effect_change.position <= text_pos:
+			if effect_change.get("type") == "start_zone":
+				in_zone = true
+				zone_jitter = effect_change.effects.get("jitter", 0)
+				zone_wiggle = effect_change.effects.get("wiggle", 0)
+				zone_shake = effect_change.effects.get("shake", 0)
+			elif effect_change.get("type") == "end_zone":
+				in_zone = false
+	if in_zone:
+		if zone_jitter > 0:
+			apply_jitter_to_position(position, zone_jitter)
+		
+		if zone_wiggle > 0:
+			apply_wiggle_to_position(position, zone_wiggle)
+		
+		if zone_shake > 0:
+			apply_shake_to_position(position, zone_shake)
+
+func ripple_targeted(label: Label, ripple_frames: int):
 	var ripple_data = {
-		"center": position,
+		"label": label,
 		"start_time": Time.get_ticks_msec(),
 		"duration": ripple_frames * (1000.0 / 60.0)
 	}
@@ -643,28 +815,147 @@ func ripple(position: int, ripple_frames: int):
 func _ripple_timer():
 	var current_time = Time.get_ticks_msec()
 	ripple_positions = ripple_positions.filter(func(ripple): 
-		return (current_time - ripple.start_time) < ripple.duration)
+		return (current_time - ripple.start_time) < ripple.duration and is_instance_valid(ripple.label))
 	
 	if ripple_positions.size() > 0:
-		ripple_effect()
+		ripple_effect_targeted()
 
-func ripple_effect():
-	for i in range(text_labels.size()):
-		if i < text_labels.size() and is_instance_valid(text_labels[i]):
-			var label = text_labels[i]
-			var scale_multiplier = 1.0
+func ripple_effect_targeted():
+	for label in text_labels:
+		if is_instance_valid(label):
+			label.scale = Vector2.ONE
+	
+	for ripple_data in ripple_positions:
+		if is_instance_valid(ripple_data.label):
+			var time_elapsed = Time.get_ticks_msec() - ripple_data.start_time
 			
-			for ripple_data in ripple_positions:
-				var distance = abs(i - ripple_data.center)
-				var time_elapsed = Time.get_ticks_msec() - ripple_data.start_time
-				
-				if time_elapsed < ripple_data.duration:
-					var time_factor = 1.0 - (time_elapsed / ripple_data.duration)
-					var distance_factor = max(0.0, 1.0 - (distance / 3.0))
-					var ripple_strength = time_factor * distance_factor * 0.4
-					scale_multiplier += ripple_strength
+			if time_elapsed < ripple_data.duration:
+				var time_factor = 1.0 - (time_elapsed / ripple_data.duration)
+				var ripple_strength = time_factor * 0.4
+				var scale_multiplier = 1.0 + ripple_strength
+				ripple_data.label.scale = Vector2(scale_multiplier, scale_multiplier)
+
+func apply_jitter_to_position(position: int, intensity: int):
+	if position < text_labels.size() and is_instance_valid(text_labels[position]):
+		var jitter_data = {
+			"label": text_labels[position],
+			"intensity": intensity,
+			"active": true
+		}
+		jitter_effects.append(jitter_data)
+
+func apply_shake_to_position(position: int, frames: int, intensity: int = 3):
+	if position < text_labels.size() and is_instance_valid(text_labels[position]):
+		var shake_data = {
+			"label": text_labels[position],
+			"start_time": Time.get_ticks_msec(),
+			"duration": frames * (1000.0 / 60.0),
+			"intensity": intensity,
+			"original_pos": text_labels[position].position
+		}
+		shake_effects.append(shake_data)
+
+func apply_wiggle_to_position(position: int, intensity: int):
+	if position < text_labels.size() and is_instance_valid(text_labels[position]):
+		var wiggle_data = {
+			"label": text_labels[position],
+			"intensity": intensity,
+			"active": true
+		}
+		wiggle_effects.append(wiggle_data)
+
+func _update_effects():
+	var current_time = Time.get_ticks_msec()
+	
+	for jitter_data in jitter_effects:
+		if is_instance_valid(jitter_data.label) and jitter_data.active:
+			var jitter_offset = Vector2(
+				randf_range(-jitter_data.intensity, jitter_data.intensity),
+				randf_range(-jitter_data.intensity, jitter_data.intensity)
+			)
+			if not jitter_data.label.has_meta("original_pos"):
+				jitter_data.label.set_meta("original_pos", jitter_data.label.position)
 			
-			label.scale = Vector2(scale_multiplier, scale_multiplier)
+			var original_pos = jitter_data.label.get_meta("original_pos")
+			jitter_data.label.position = original_pos + jitter_offset
+	
+	shake_effects = shake_effects.filter(func(shake):
+		if not is_instance_valid(shake.label):
+			return false
+		
+		var elapsed = current_time - shake.start_time
+		if elapsed < shake.duration:
+			var shake_factor = 1.0 - (elapsed / shake.duration)
+			var shake_offset = Vector2(
+				randf_range(-shake.intensity * shake_factor, shake.intensity * shake_factor),
+				randf_range(-shake.intensity * shake_factor, shake.intensity * shake_factor)
+			)
+			shake.label.position = shake.original_pos + shake_offset
+			return true
+		else:
+			shake.label.position = shake.original_pos
+			return false
+	)
+	
+	for wiggle_data in wiggle_effects:
+		if is_instance_valid(wiggle_data.label) and wiggle_data.active:
+			var wiggle_rotation = sin(current_time * 0.01) * deg_to_rad(wiggle_data.intensity)
+			wiggle_data.label.rotation = wiggle_rotation
+
+func display_choices():
+	clear_choice_buttons()
+	show_choice_container()
+	create_choice_buttons()
+
+func show_choice_container():
+	choice_container.visible = true
+	var choice_count = choice_options.size()
+	
+	if choice_container is Control:
+		var base_height = 100 
+		var height_per_choice = 60 
+		var total_height = base_height + (choice_count * height_per_choice)
+		
+		choice_container.size.y = total_height
+
+func create_choice_buttons():
+	if not choice_container:
+		print("ERROR: Choice container is null! Cannot create choice buttons.")
+		return
+		
+	# Create buttons for each choice
+	for i in range(choice_options.size()):
+		var button = Button.new()
+		button.text = choice_options[i]
+		button.add_theme_font_size_override("font_size", dialogue_data.integers["FontSize"])
+		
+		var choice_index = i
+		button.pressed.connect(func(): select_choice(choice_index))
+		
+		choice_container.add_child(button)
+		choice_buttons.append(button)
+
+func select_choice(choice_index: int):
+	if choice_index >= 0 and choice_index < choice_destinations.size():
+		var destination = choice_destinations[choice_index]
+		
+		if destination >= 0 and character_data != null:
+			if destination < character_data.dialogue_text_files.size():
+				var new_file_path = character_data.dialogue_text_files[destination]
+				dialogue_data.text_file_path = new_file_path
+				hide_choice_container()
+				choice_mode = false
+				load_text()
+
+func hide_choice_container():
+	choice_container.visible = false
+	clear_choice_buttons()
+
+func clear_choice_buttons():
+	for button in choice_buttons:
+		if is_instance_valid(button):
+			button.queue_free()
+	choice_buttons.clear()
 
 func finish_current():
 	is_typing = false
@@ -692,6 +983,13 @@ func finish_current():
 	for label in banished_labels:
 		if is_instance_valid(label):
 			label.scale = Vector2.ONE
+	
+	if current_segment_index < full_dialogue_segments.size():
+		var current_segment = full_dialogue_segments[current_segment_index]
+		if current_segment.get("is_choice", false):
+			choice_mode = true
+			display_choices()
+			return
 	
 	waiting_for_input = true
 
@@ -730,14 +1028,18 @@ func skip():
 		finish_current()
 
 func _button():
-	if is_typing:
+	if choice_mode:
+		return
+	elif is_typing:
 		skip()
 	elif waiting_for_input:
 		next()
 
 func _input(event):
 	if event.is_action_pressed("ui_accept"):
-		if is_typing:
+		if choice_mode:
+			return
+		elif is_typing:
 			skip()
 		elif waiting_for_input:
 			next()

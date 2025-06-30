@@ -11,13 +11,14 @@ config_version=5
 [application]
 
 config/name="Dating_Sim"
+run/main_scene="uid://cuysm2kox8jt8"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
 [display]
 
-window/size/viewport_width=1080
-window/size/viewport_height=720
+window/size/viewport_width=1920
+window/size/viewport_height=1080
 
 [gui]
 

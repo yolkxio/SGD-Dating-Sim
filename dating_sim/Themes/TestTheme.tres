@@ -1,6 +1,7 @@
-[gd_resource type="Theme" load_steps=6 format=3 uid="uid://d3nxnxsg34eew"]
+[gd_resource type="Theme" load_steps=7 format=3 uid="uid://d3nxnxsg34eew"]
 
 [ext_resource type="FontFile" uid="uid://c0pe8wboespth" path="res://Fonts/ThickTestFont.ttf" id="1_rxy1k"]
+[ext_resource type="FontFile" uid="uid://b41entevbocrc" path="res://Fonts/FiraCode-Light.otf" id="1_skldi"]
 [ext_resource type="FontFile" uid="uid://co5nge7anbeo1" path="res://Fonts/ThinTestFont.ttf" id="2_vgw13"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_23v3e"]
@@ -11,12 +12,14 @@ content_margin_bottom = 3.0
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k1aya"]
 bg_color = Color(0.701961, 0.568627, 0.741176, 1)
 border_width_left = 4
-border_width_top = 5
+border_width_top = 4
 border_width_right = 4
-border_width_bottom = 2
+border_width_bottom = 4
 border_color = Color(0.784314, 0.309804, 0.643137, 1)
 corner_radius_top_left = 6
 corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 corner_detail = 1
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_skldi"]
@@ -34,8 +37,8 @@ Label/constants/outline_size = 3
 Label/constants/shadow_offset_x = 1
 Label/constants/shadow_offset_y = 1
 Label/constants/shadow_outline_size = 1
-Label/font_sizes/font_size = 80
-Label/fonts/font = ExtResource("1_rxy1k")
+Label/font_sizes/font_size = 32
+Label/fonts/font = ExtResource("1_skldi")
 Label/styles/normal = SubResource("StyleBoxEmpty_23v3e")
 Panel/styles/panel = SubResource("StyleBoxFlat_k1aya")
 RichTextLabel/constants/line_separation = 0
