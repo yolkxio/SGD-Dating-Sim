@@ -1,7 +1,7 @@
 ea4bc82a6ad023ab7ee23ee620429895
-::res://::1751247938
+::res://::1751511179
 icon.svg::CompressedTexture2D/CompressedTexture2D::4810510679844369055::1750013524::1750013561::1::::<><><>0<>0<>e78e455df3828e743282a69f3092d1f2<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
-::res://Assets/::1751248508
+::res://Assets/::1751390301
 ::res://Assets/Art/::1750044329
 ::res://Assets/Art/Backgrounds/::1750028245
 ::res://Assets/Art/Characters/::1750277223
@@ -15,25 +15,27 @@ TestButton1.png::CompressedTexture2D/CompressedTexture2D::3806347464167921246::1
 TestButton2.png::CompressedTexture2D/CompressedTexture2D::6709256317631612898::1750183608::1750183937::1::::<><><>0<>0<>df45fc1378778a76e59c1f9fca0c4e0b<>res://.godot/imported/TestButton2.png-2d98703587f22cdc8e9d60d46a49a623.ctex::
 TestButton3.png::CompressedTexture2D/CompressedTexture2D::5263181501144084298::1750183608::1750183932::1::::<><><>0<>0<>239b07851f2d9c85cb585f1f815efa7a<>res://.godot/imported/TestButton3.png-1f9a41acaa6062b377a93f29a81951d8.ctex::
 TestButton4.png::CompressedTexture2D/CompressedTexture2D::3039347771291481411::1750183608::1750183925::1::::<><><>0<>0<>08441791272b83a26142b474831482eb<>res://.godot/imported/TestButton4.png-c01057c7515a573ee9b8f56d9510e15e.ctex::
-::res://Assets/Sounds/::1751248526
-blipSelect (1).wav::AudioStreamWAV::1026150997175825051::1751248525::1751248526::1::::<><><>0<>0<>9b6d6f665d5e201e5c416cfeb47fe02e<>res://.godot/imported/blipSelect (1).wav-1b863d944a7bd6479b790c0a5073156c.sample::
-blipSelect (2).wav::AudioStreamWAV::5145960622343087919::1751248525::1751248526::1::::<><><>0<>0<>741f14e17faa05fffd12f81172b9a6f4<>res://.godot/imported/blipSelect (2).wav-178a1ae2034f16a43e405420bba639a7.sample::
-blipSelect.wav::AudioStreamWAV::1976362886285983499::1751248525::1751248526::1::::<><><>0<>0<>20b85fc9d811976f32c8334fc28bd399<>res://.godot/imported/blipSelect.wav-3d669b5171622c840f59e6fe367116c3.sample::
-click.wav::AudioStreamWAV::5416016314355070194::1751248526::1751248526::1::::<><><>0<>0<>a8384ed2acfada4b974c061636e53706<>res://.godot/imported/click.wav-1bfb7ebb87aeafb0d3a3f326fb8adf75.sample::
-Crunch.wav::AudioStreamWAV::5356162287466971374::1751248525::1751248526::1::::<><><>0<>0<>a69ff33441e12aeead036af5fadabad8<>res://.godot/imported/Crunch.wav-719d22c73407d50b6c14b78ee36514d6.sample::
-explosion (1).wav::AudioStreamWAV::1925926294863396538::1751248525::1751248526::1::::<><><>0<>0<>751e7ba585d5ee3fc43d87f6cdac295f<>res://.godot/imported/explosion (1).wav-cc22d4aadfe01ab189cb83d993c7215c.sample::
-explosion (2).wav::AudioStreamWAV::5714314523024188394::1751248525::1751248526::1::::<><><>0<>0<>0d64d69877f7f31eb64b55b45c135af4<>res://.godot/imported/explosion (2).wav-b3ba7d7aa218ebca13acd74dc6074258.sample::
-explosion.wav::AudioStreamWAV::5250759219558514980::1751248526::1751248526::1::::<><><>0<>0<>e6802fa2a5be33562441cc5c60761a7d<>res://.godot/imported/explosion.wav-bc16692f24ce8829345116ef70c39dbd.sample::
-laserShoot (1).wav::AudioStreamWAV::2373413882150901511::1751248525::1751248526::1::::<><><>0<>0<>e97f709bf316c242a3ebb44f81e0955d<>res://.godot/imported/laserShoot (1).wav-0539df848913630842a955d65b8d5e24.sample::
-laserShoot.wav::AudioStreamWAV::4636036122866805296::1751248525::1751248526::1::::<><><>0<>0<>22b941c3eb8598a6da0dbf36ad781ca1<>res://.godot/imported/laserShoot.wav-531d737702cb1bfddf423e2fd88ffa65.sample::
-random (1).wav::AudioStreamWAV::1788909948826763304::1751248525::1751248526::1::::<><><>0<>0<>e6f5857ecfd45ba5c4a276c5c74c4141<>res://.godot/imported/random (1).wav-ee4d251973387eb8c4511e7178d68be7.sample::
-random.wav::AudioStreamWAV::1503124014716974085::1751248525::1751248526::1::::<><><>0<>0<>ab5669fd130a36a1895d8e5e5f0e9ee4<>res://.godot/imported/random.wav-22f9ea1d80f916b1f6fc76ce915d015b.sample::
-Shoot.wav::AudioStreamWAV::5648089655589246145::1751248525::1751248526::1::::<><><>0<>0<>f482b25fe16dbf298f986eda3994b0b7<>res://.godot/imported/Shoot.wav-683b7e537311ed2cc644d784084bb0eb.sample::
-::res://Assets/Text/::1750797392
-Commands.txt::TextFile/TextFile::-1::1750470593::0::1::::<><><>0<>0<><>::
-Test Dialogue.txt::TextFile/TextFile::-1::1750797392::0::1::::<><><>0<>0<><>::
-::res://Fonts/::1750617483
-FiraCode-Light.otf::FontFile/FontFile::4475838059172327660::1750617477::1750617483::1::::<><><>0<>0<>44124bf4a6460eddde5bb9c3ae3d281e<>res://.godot/imported/FiraCode-Light.otf-36c450724421007b4fd1a7c985c66640.fontdata::
+::res://Assets/Sounds/::1751391836
+blipSelect (1).wav::AudioStreamWAV/AudioStreamWAV::1026150997175825051::1751390301::1751390315::1::::<><><>0<>0<>9b6d6f665d5e201e5c416cfeb47fe02e<>res://.godot/imported/blipSelect (1).wav-1b863d944a7bd6479b790c0a5073156c.sample::
+blipSelect (2).wav::AudioStreamWAV/AudioStreamWAV::5145960622343087919::1751390301::1751391836::1::::<><><>0<>0<>a5a15acfb86c3520e9807cecf3cf4101<>res://.godot/imported/blipSelect (2).wav-178a1ae2034f16a43e405420bba639a7.sample::
+blipSelect.wav::AudioStreamWAV/AudioStreamWAV::1976362886285983499::1751390301::1751390315::1::::<><><>0<>0<>20b85fc9d811976f32c8334fc28bd399<>res://.godot/imported/blipSelect.wav-3d669b5171622c840f59e6fe367116c3.sample::
+click.wav::AudioStreamWAV/AudioStreamWAV::5416016314355070194::1751390301::1751390315::1::::<><><>0<>0<>a8384ed2acfada4b974c061636e53706<>res://.godot/imported/click.wav-1bfb7ebb87aeafb0d3a3f326fb8adf75.sample::
+Crunch.wav::AudioStreamWAV/AudioStreamWAV::5356162287466971374::1751390301::1751390315::1::::<><><>0<>0<>a69ff33441e12aeead036af5fadabad8<>res://.godot/imported/Crunch.wav-719d22c73407d50b6c14b78ee36514d6.sample::
+explosion (1).wav::AudioStreamWAV/AudioStreamWAV::1925926294863396538::1751390301::1751390315::1::::<><><>0<>0<>751e7ba585d5ee3fc43d87f6cdac295f<>res://.godot/imported/explosion (1).wav-cc22d4aadfe01ab189cb83d993c7215c.sample::
+explosion (2).wav::AudioStreamWAV/AudioStreamWAV::5714314523024188394::1751390301::1751390315::1::::<><><>0<>0<>0d64d69877f7f31eb64b55b45c135af4<>res://.godot/imported/explosion (2).wav-b3ba7d7aa218ebca13acd74dc6074258.sample::
+explosion.wav::AudioStreamWAV/AudioStreamWAV::5250759219558514980::1751390301::1751390315::1::::<><><>0<>0<>e6802fa2a5be33562441cc5c60761a7d<>res://.godot/imported/explosion.wav-bc16692f24ce8829345116ef70c39dbd.sample::
+laserShoot (1).wav::AudioStreamWAV/AudioStreamWAV::2373413882150901511::1751390301::1751390315::1::::<><><>0<>0<>e97f709bf316c242a3ebb44f81e0955d<>res://.godot/imported/laserShoot (1).wav-0539df848913630842a955d65b8d5e24.sample::
+laserShoot.wav::AudioStreamWAV/AudioStreamWAV::4636036122866805296::1751390301::1751390315::1::::<><><>0<>0<>22b941c3eb8598a6da0dbf36ad781ca1<>res://.godot/imported/laserShoot.wav-531d737702cb1bfddf423e2fd88ffa65.sample::
+random (1).wav::AudioStreamWAV/AudioStreamWAV::1788909948826763304::1751390301::1751390315::1::::<><><>0<>0<>e6f5857ecfd45ba5c4a276c5c74c4141<>res://.godot/imported/random (1).wav-ee4d251973387eb8c4511e7178d68be7.sample::
+random.wav::AudioStreamWAV/AudioStreamWAV::1503124014716974085::1751390301::1751390315::1::::<><><>0<>0<>ab5669fd130a36a1895d8e5e5f0e9ee4<>res://.godot/imported/random.wav-22f9ea1d80f916b1f6fc76ce915d015b.sample::
+Shoot.wav::AudioStreamWAV/AudioStreamWAV::5648089655589246145::1751390301::1751390315::1::::<><><>0<>0<>f482b25fe16dbf298f986eda3994b0b7<>res://.godot/imported/Shoot.wav-683b7e537311ed2cc644d784084bb0eb.sample::
+::res://Assets/Text/::1751392029
+Commands.txt::TextFile/TextFile::-1::1751390306::0::1::::<><><>0<>0<><>::
+Test Dialogue.txt::TextFile::-1::1751392029::0::1::::<><><>0<>0<><>::
+testchoiceA.txt::TextFile/TextFile::-1::1751390301::0::1::::<><><>0<>0<><>::
+testchoiceB.txt::TextFile/TextFile::-1::1751390301::0::1::::<><><>0<>0<><>::
+::res://Fonts/::1751390315
+FiraCode-Light.otf::FontFile/FontFile::4475838059172327660::1751390301::1751390315::1::::<><><>0<>0<>44124bf4a6460eddde5bb9c3ae3d281e<>res://.godot/imported/FiraCode-Light.otf-36c450724421007b4fd1a7c985c66640.fontdata::
 FogBPS01.otf::FontFile/FontFile::7273057277580037682::1750110343::1750112651::1::::<><><>0<>0<>75a0024de20582bf80f4ea6dd2eb106f<>res://.godot/imported/FogBPS01.otf-7d8e3b756ad4f55544e3828440bca83a.fontdata::
 Foglihten-068.otf::FontFile/FontFile::5991610222256352345::1750110166::1750112591::1::::<><><>0<>0<>68667e17419db2c92d07bb4f017624f7<>res://.godot/imported/Foglihten-068.otf-999de5ba94c30b8b64273449f6222da8.fontdata::
 FoglihtenBlackPcs.otf::FontFile/FontFile::5231334024818685285::1750110343::1750115473::1::::<><><>0<>0<>49cef5aaadb398d8c36c36ba474b95ac<>res://.godot/imported/FoglihtenBlackPcs.otf-2900a3eaa586ce48c84e1ede3db21760.fontdata::
@@ -48,17 +50,18 @@ FoglihtenNo07calt.otf::FontFile/FontFile::5033250897743462429::1750110235::17501
 FoglihtenPCS-068.otf::FontFile/FontFile::285702566004379242::1750110163::1750110365::1::::<><><>0<>0<>365f7200cc973de10ec476c186f21cf5<>res://.godot/imported/FoglihtenPCS-068.otf-af0c471959f2beb096e14cdbbe3a6819.fontdata::
 FogtwoNo5.otf::FontFile/FontFile::1228882279734461191::1750110284::1750110365::1::::<><><>0<>0<>157d644c78207629926bfc33f647822e<>res://.godot/imported/FogtwoNo5.otf-e334b2be241a95bc40a568273e13a2de.fontdata::
 Minecraft.ttf::FontFile/FontFile::5946830445548822681::1750108226::1750110069::1::::<><><>0<>0<>f0a03eba5d6c7cb987c6ea24e11fd48f<>res://.godot/imported/Minecraft.ttf-73ceaa08946f79e0d3c76746bd74b6b1.fontdata::
-ThickTestFont.ttf::FontFile/FontFile::6558831081518510105::1750024064::1750617001::1::::<><><>0<>0<>1cef187b55184403658691e2ab631fd9<>res://.godot/imported/ThickTestFont.ttf-e07b90c0a8e1365687376169e216b95a.fontdata::
+ThickTestFont.ttf::FontFile/FontFile::6558831081518510105::1750024064::1751390315::1::::<><><>0<>0<>1cef187b55184403658691e2ab631fd9<>res://.godot/imported/ThickTestFont.ttf-e07b90c0a8e1365687376169e216b95a.fontdata::
 ThinTestFont.ttf::FontFile/FontFile::5818216806154400862::1750024083::1750027754::1::::<><><>0<>0<>2a457cb7ba6e341cb7f6af155c93f12f<>res://.godot/imported/ThinTestFont.ttf-3a3f8d20423c4becff47676d97ea4949.fontdata::
-::res://Scenes/::1751248315
-ProgrammerArthony.tscn::PackedScene::4432233855736660678::1751248315::0::1::::<><><>0<>0<><>::uid://cuysm2kox8jt8::::res://Scenes/Screen.tscn<>uid://dd5joc123yh27::::res://Assets/Art/Characters/programmerarthony1.png
-Screen.tscn::PackedScene::6227279075887577347::1751063880::0::1::::<><><>0<>0<><>::uid://bu244lsn5ye7o::::res://Scripts/TestText.gd<>uid://drrecr43opomx::::res://Scripts/Resources/Test.tres<>uid://buh28sserylog::::res://Assets/Art/UI/TestButton1.png<>uid://c2uaqa3vtuqbq::::res://Assets/Art/UI/TestButton2.png<>uid://cg8r3h5uriu6m::::res://Assets/Art/UI/TestButton3.png
-::res://Scripts/::1750799988
-TestText.gd::GDScript/GDScript::3847748942821862814::1750799988::0::1::::<>Control<><>0<>0<><>::
-::res://Scripts/Classes/::1751061307
-CharacterBase.gd::GDScript::2895292924970268020::1751061307::0::1::::CharacterData<>Resource<><>0<>0<><>::
+::res://Scenes/::1751393594
+ProgrammerArthony.tscn::PackedScene::4432233855736660678::1751393594::0::1::::<><><>0<>0<><>::uid://cuysm2kox8jt8::::res://Scenes/Screen.tscn<>uid://dd5joc123yh27::::res://Assets/Art/Characters/programmerarthony1.png
+Screen.tscn::PackedScene::6227279075887577347::1751392542::0::1::::<><><>0<>0<><>::uid://bu244lsn5ye7o::::res://Scripts/TestText.gd<>uid://drrecr43opomx::::res://Scripts/Resources/Test.tres<>uid://bfxfpkcpwolcg::::res://Scripts/Resources/PA.tres<>uid://buh28sserylog::::res://Assets/Art/UI/TestButton1.png<>uid://c2uaqa3vtuqbq::::res://Assets/Art/UI/TestButton2.png<>uid://cg8r3h5uriu6m::::res://Assets/Art/UI/TestButton3.png
+::res://Scripts/::1751392539
+TestText.gd::GDScript::3847748942821862814::1751392539::0::1::::<>Control<><>0<>0<><>::
+::res://Scripts/Classes/::1751390306
+CharacterBase.gd::GDScript/GDScript::2895292924970268020::1751390306::0::1::::CharacterData<>Resource<><>0<>0<><>::
 DialogueBase.gd::GDScript/GDScript::6363026478002413528::1750377328::0::1::::DialogueData<>Resource<><>0<>0<><>::
-::res://Scripts/Resources/::1751248026
-Test.tres::Resource/DialogueData::8387814193291532799::1751248026::0::1::::<><><>0<>0<><>::uid://cwwkd7uw3ndoi::::res://Scripts/Classes/DialogueBase.gd
-::res://Themes/::1751248026
-TestTheme.tres::Theme::9152807526056086678::1751248026::0::1::::<><><>0<>0<><>::uid://c0pe8wboespth::::res://Fonts/ThickTestFont.ttf<>uid://b41entevbocrc::::res://Fonts/FiraCode-Light.otf<>uid://co5nge7anbeo1::::res://Fonts/ThinTestFont.ttf
+::res://Scripts/Resources/::1751390493
+PA.tres::Resource/CharacterData::2785176491133647654::1751390493::0::1::::<><><>0<>0<><>::uid://bhirb0q308e7m::::res://Scripts/Classes/CharacterBase.gd<>uid://dd5joc123yh27::::res://Assets/Art/Characters/programmerarthony1.png<>uid://q1iq6tee62qa::::res://Assets/Art/Characters/programmerarthony2.png<>uid://bn7x820ix5sux::::res://Assets/Art/Characters/programmerarthony3.png<>uid://7fu0pocic2ni::::res://Assets/Art/Characters/programmerarthony4.png<>uid://cfk0hp41oartf::::res://Assets/Sounds/blipSelect (2).wav
+Test.tres::Resource/DialogueData::8387814193291532799::1751390321::0::1::::<><><>0<>0<><>::uid://cwwkd7uw3ndoi::::res://Scripts/Classes/DialogueBase.gd
+::res://Themes/::1751390321
+TestTheme.tres::Theme::9152807526056086678::1751390321::0::1::::<><><>0<>0<><>::uid://c0pe8wboespth::::res://Fonts/ThickTestFont.ttf<>uid://b41entevbocrc::::res://Fonts/FiraCode-Light.otf<>uid://co5nge7anbeo1::::res://Fonts/ThinTestFont.ttf

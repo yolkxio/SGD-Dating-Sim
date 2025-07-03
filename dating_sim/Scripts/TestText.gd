@@ -21,6 +21,8 @@ var waiting_for_input: bool = false
 var text_labels: Array = []
 var banished_labels: Array = []
 var text_container: Control
+var choice_vbox: VBoxContainer
+var audio_player: AudioStreamPlayer
 var is_word_mode: bool = false
 var current_segment_word_positions: Array = []
 var next_text_position: Vector2 = Vector2.ZERO
@@ -38,7 +40,8 @@ var wiggle_effects: Array = []
 var icon_button: TextureButton
 
 func _ready():
-	setup_choice_system()
+	setup_choice()
+	setup_audio()
 	typing_system()
 	dialogue_box()
 	connect_button()
@@ -70,12 +73,17 @@ func connect_button():
 	if icon_button:
 		icon_button.pressed.connect(_button)
 
-func setup_choice_system():
+func setup_audio():
+	audio_player = AudioStreamPlayer.new()
+	add_child(audio_player)
+
+func setup_choice():
 	choice_container = $TextContainer/TextBackground/MarginContainer/ChoiceContainer
 	if choice_container:
 		choice_container.visible = false
+		choice_vbox = $TextContainer/TextBackground/MarginContainer/ChoiceContainer/VBoxContainer
 
-func set_character_data(character: CharacterData):
+func set_character(character: CharacterData):
 	character_data = character
 
 func load_text():
@@ -96,48 +104,68 @@ func parse_text(content: String):
 	full_dialogue_segments.clear()
 	current_segment_index = 0
 	var raw_segments = content.split("<>")
+	var choice_sequence_detected = false
+	var i = 0
 	
-	for segment in raw_segments:
-		var cleaned_segment = segment.strip_edges()
-		if cleaned_segment.length() > 0:
-			if cleaned_segment.begins_with("<:>"):
-				var choice_data = parse_choice_segment(cleaned_segment)
-				full_dialogue_segments.append(choice_data)
-			else:
-				var parsed_data = find_effects(cleaned_segment)
+	while i < raw_segments.size():
+		var current_segment = raw_segments[i].strip_edges()
+		
+		if current_segment.contains("[:]"):
+			choice_sequence_detected = true
+			
+			if current_segment.length() > 0:
+				var parsed_data = find_effects(current_segment)
+				parsed_data["is_choice_prompt"] = true
 				full_dialogue_segments.append(parsed_data)
+			
+			var choice_options_text = []
+			var j = i + 1
+			while j < raw_segments.size():
+				var choice_segment = raw_segments[j].strip_edges()
+				if choice_segment.length() > 0 and choice_segment.contains("[:"):
+					choice_options_text.append(choice_segment)
+				else:
+					if choice_segment.length() > 0:
+						var regular_data = find_effects(choice_segment)
+						full_dialogue_segments.append(regular_data)
+					j += 1
+					continue
+				j += 1
+			
+			var choice_data = create_choice_data(choice_options_text)
+			full_dialogue_segments.append(choice_data)
+			i = j
+			continue
+		else:
+			if current_segment.length() > 0:
+				var parsed_data = find_effects(current_segment)
+				full_dialogue_segments.append(parsed_data)
+		
+		i += 1
 
-func parse_choice_segment(choice_segment: String) -> Dictionary:
-	var choice_content = choice_segment.substr(3)
+func create_choice_data(choice_options_text: Array) -> Dictionary:
 	choice_options.clear()
 	choice_destinations.clear()
-	var choice_parts = choice_content.split(" ")
-	var prompt_text = ""
-	var collecting_prompt = true
 	
-	for part in choice_parts:
-		if collecting_prompt and not part.contains("<"):
-			prompt_text += part + " "
-		else:
-			collecting_prompt = false
-			var trimmed_part = part.strip_edges()
-			if trimmed_part.length() > 0:
-				var destination_index = -1
-				var choice_text = trimmed_part
-				var regex = RegEx.new()
-				regex.compile("<(\\d+)>")
-				var result = regex.search(trimmed_part)
-				
-				if result:
-					destination_index = result.get_string(1).to_int()
-					choice_text = trimmed_part.replace(result.get_string(0), "").strip_edges()
-				
-				if choice_text.length() > 0:
-					choice_options.append(choice_text)
-					choice_destinations.append(destination_index)
+	for choice_text in choice_options_text:
+		var trimmed_choice = choice_text.strip_edges()
+		if trimmed_choice.length() > 0:
+			var destination_index = -1
+			var clean_choice_text = trimmed_choice
+			var regex = RegEx.new()
+			regex.compile("\\[:(\\d+)\\]")
+			var result = regex.search(trimmed_choice)
+			
+			if result:
+				destination_index = result.get_string(1).to_int()
+				clean_choice_text = trimmed_choice.replace(result.get_string(0), "").strip_edges()
+			
+			if clean_choice_text.length() > 0:
+				choice_options.append(clean_choice_text)
+				choice_destinations.append(destination_index)
 	
 	return {
-		"text": prompt_text.strip_edges(),
+		"text": "",
 		"effects": [],
 		"is_choice": true
 	}
@@ -240,6 +268,14 @@ func start_effects(effect_str: String, effects: Dictionary):
 		var wiggle_intensity = number_str.to_int() if number_str != "" else 5
 		effects["wiggle"] = wiggle_intensity
 
+func play_sound():
+	if character_data and audio_player:
+		var talking_sound = character_data.character_sounds.get("talking")
+		if talking_sound:
+			audio_player.stream = talking_sound
+			audio_player.pitch_scale = randf_range(0.9, 1.1)
+			audio_player.play()
+
 func delete_rendered():
 	for label in text_labels:
 		if is_instance_valid(label):
@@ -260,6 +296,12 @@ func start_next():
 		return
 	
 	var segment_data = full_dialogue_segments[current_segment_index]
+	
+	if segment_data.get("is_choice", false):
+		choice_mode = true
+		display_choices()
+		return
+	
 	current_segment_text = segment_data.text
 	current_segment_effects = segment_data.effects
 	current_position = 0
@@ -444,19 +486,15 @@ func effects_apply_wm():
 			if effect_type == "start_zone":
 				in_effect_zone = true
 				current_effect_zone = effect_change.effects.duplicate()
-				# Don't track ripple in zones anymore
 				current_char_delay = current_effect_zone.get("char_delay", current_char_delay)
 				current_word_speed = current_effect_zone.get("word_speed", current_word_speed)
 			elif effect_type == "end_zone":
 				in_effect_zone = false
 				current_effect_zone.clear()
-				# Don't clear ripple effects here - let them finish naturally
 			else:
-				# Regular permanent effect - don't track ripple here either
 				current_char_delay = effect_change.effects.get("char_delay", current_char_delay)
 				current_word_speed = effect_change.effects.get("word_speed", current_word_speed)
 			
-			# Handle mode switching
 			var old_mode = is_word_mode
 			var new_mode = (current_char_delay == 0)
 			
@@ -464,7 +502,6 @@ func effects_apply_wm():
 				wm_switch(new_mode, word_char_position)
 				return
 			
-			# Handle delays
 			var delay_frames = effect_change.effects.get("delay")
 			if delay_frames != null and delay_frames > 0:
 				var delay_seconds = delay_frames / 60.0
@@ -524,7 +561,6 @@ func update_effects():
 					if is_instance_valid(label):
 						label.scale = Vector2.ONE
 			else:
-				# Add the missing variable declarations
 				var old_ripple = current_ripple_frames
 				var old_char_delay = current_char_delay
 				var old_word_speed = current_word_speed
@@ -738,6 +774,9 @@ func _render_timer():
 			char_label.modulate.a = 1.0
 			apply_effects_to_current_position(current_position)
 			
+			if char != " " and char != "\n":
+				play_sound()
+			
 			current_position += 1
 			
 			while current_position < current_segment_text.length() and current_segment_text[current_position] == " ":
@@ -751,12 +790,16 @@ func _render_timer():
 		if current_position >= text_labels.size():
 			finish_current()
 	else:
+		#word mode rendering
 		if current_word_index < text_labels.size():
 			effects_apply_wm()
 			var word_label = text_labels[current_word_index]
 			var word_text = word_label.text
 			word_label.modulate.a = 1.0
 			apply_effects_to_current_position(current_word_index)
+			
+			if word_text != " " and word_text != "\n":
+				play_sound()
 			
 			current_word_index += 1
 		else:
@@ -919,20 +962,17 @@ func show_choice_container():
 		choice_container.size.y = total_height
 
 func create_choice_buttons():
-	if not choice_container:
-		print("ERROR: Choice container is null! Cannot create choice buttons.")
+	if not choice_vbox:
+		print("ERROR: Choice VBox is null! Cannot create choice buttons.")
 		return
-		
-	# Create buttons for each choice
+	
 	for i in range(choice_options.size()):
 		var button = Button.new()
 		button.text = choice_options[i]
 		button.add_theme_font_size_override("font_size", dialogue_data.integers["FontSize"])
-		
 		var choice_index = i
 		button.pressed.connect(func(): select_choice(choice_index))
-		
-		choice_container.add_child(button)
+		choice_vbox.add_child(button)
 		choice_buttons.append(button)
 
 func select_choice(choice_index: int):
@@ -986,9 +1026,9 @@ func finish_current():
 	
 	if current_segment_index < full_dialogue_segments.size():
 		var current_segment = full_dialogue_segments[current_segment_index]
-		if current_segment.get("is_choice", false):
-			choice_mode = true
-			display_choices()
+		if current_segment.get("is_choice_prompt", false):
+			current_segment_index += 1
+			start_next()
 			return
 	
 	waiting_for_input = true

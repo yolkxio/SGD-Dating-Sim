@@ -2,8 +2,4 @@ res://Scenes/ProgrammerArthony.tscn
 res://Themes/TestTheme.tres
 res://Scripts/Resources/Test.tres
 res://Scripts/Resources/PA.tres
-res://Assets/Text/testchoiceA.txt
-res://Assets/Text/testchoiceB.txt
 res://Scripts/TestText.gd
-res://Scenes/Screen.tscn
-res://Assets/Text/Test Dialogue.txt
