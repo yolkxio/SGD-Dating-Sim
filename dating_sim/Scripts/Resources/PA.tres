@@ -13,10 +13,10 @@ character_name = "Programmer Arthony"
 character_id = "PA"
 dialogue_text_files = Array[String](["res://Assets/Text/Test Dialogue.txt", "res://Assets/Text/testchoiceA.txt", "res://Assets/Text/testchoiceB.txt"])
 character_images = {
-"four": ExtResource("4_jkc0y"),
-"one": ExtResource("1_yd68a"),
-"three": ExtResource("3_x1m1b"),
-"two": ExtResource("2_j1k4k")
+"angry": ExtResource("2_j1k4k"),
+"happy": ExtResource("4_jkc0y"),
+"normal": ExtResource("1_yd68a"),
+"sad": ExtResource("3_x1m1b")
 }
 character_sounds = {
 "talking": ExtResource("5_yd68a")

@@ -224,7 +224,8 @@ func parse_effects(effect_str: String) -> Dictionary:
 		"delay": 0,
 		"jitter": 0,
 		"shake": 0,
-		"wiggle": 0
+		"wiggle": 0,
+		"change_image": ""
 	}
 	
 	var effect_parts = effect_str.split(",")
@@ -267,6 +268,9 @@ func start_effects(effect_str: String, effects: Dictionary):
 		var number_str = effect_str.substr(1)
 		var wiggle_intensity = number_str.to_int() if number_str != "" else 5
 		effects["wiggle"] = wiggle_intensity
+	elif effect_str.begins_with("a'") and effect_str.ends_with("'"):
+		var image_key = effect_str.substr(2, effect_str.length() - 3)
+		effects["change_image"] = image_key
 
 func play_sound():
 	if character_data and audio_player:
@@ -810,6 +814,12 @@ func apply_effects_to_current_position(position: int):
 	if is_word_mode and position < current_segment_word_positions.size():
 		text_pos = current_segment_word_positions[position]
 	
+	for effect_change in current_segment_effects:
+		if effect_change.position <= text_pos:
+			var image_key = effect_change.effects.get("change_image", "")
+			if image_key != "":
+				change_image(image_key)
+	
 	var current_ripple_value = 0
 	for effect_change in current_segment_effects:
 		if effect_change.position <= text_pos:
@@ -907,6 +917,14 @@ func apply_wiggle_to_position(position: int, intensity: int):
 		}
 		wiggle_effects.append(wiggle_data)
 
+func change_image(image_key: String):
+	if character_data:
+		var character_texture = character_data.character_images.get(image_key)
+		if character_texture:
+			var character_rect = $Character
+			if character_rect and character_rect is TextureRect:
+				character_rect.texture = character_texture
+
 func _update_effects():
 	var current_time = Time.get_ticks_msec()
 	
@@ -962,10 +980,6 @@ func show_choice_container():
 		choice_container.size.y = total_height
 
 func create_choice_buttons():
-	if not choice_vbox:
-		print("ERROR: Choice VBox is null! Cannot create choice buttons.")
-		return
-	
 	for i in range(choice_options.size()):
 		var button = Button.new()
 		button.text = choice_options[i]
