@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bn7x820ix5sux"
-path="res://.godot/imported/programmerarthony3.png-390bd2265d962fe5d8a63eb3819bbe66.ctex"
+uid="uid://c6fb62kqg4qpt"
+path="res://.godot/imported/dummy-angry-talk.PNG-14d2bf8de069caad5db098e1d67cff8a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Art/Characters/programmerarthony3.png"
-dest_files=["res://.godot/imported/programmerarthony3.png-390bd2265d962fe5d8a63eb3819bbe66.ctex"]
+source_file="res://Assets/Art/Characters/PA/dummy-angry-talk.PNG"
+dest_files=["res://.godot/imported/dummy-angry-talk.PNG-14d2bf8de069caad5db098e1d67cff8a.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dd5joc123yh27"
-path="res://.godot/imported/programmerarthony1.png-269ed3b752faa176b17bc9ad4200eae1.ctex"
+uid="uid://du5wye68vujv"
+path="res://.godot/imported/dummy-angry.PNG-6c13f0270d686fb5f94e690e6695fd89.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Art/Characters/programmerarthony1.png"
-dest_files=["res://.godot/imported/programmerarthony1.png-269ed3b752faa176b17bc9ad4200eae1.ctex"]
+source_file="res://Assets/Art/Characters/PA/dummy-angry.PNG"
+dest_files=["res://.godot/imported/dummy-angry.PNG-6c13f0270d686fb5f94e690e6695fd89.ctex"]
 
 [params]
 

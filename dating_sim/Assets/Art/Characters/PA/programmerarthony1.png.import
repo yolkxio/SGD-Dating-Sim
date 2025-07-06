@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://q1iq6tee62qa"
-path="res://.godot/imported/programmerarthony2.png-f148eb1fdfc0962c1d87301ef2ada3d8.ctex"
+uid="uid://dd5joc123yh27"
+path="res://.godot/imported/programmerarthony1.png-8ca76d8e9b80d06a0d42f8c84098987c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Art/Characters/programmerarthony2.png"
-dest_files=["res://.godot/imported/programmerarthony2.png-f148eb1fdfc0962c1d87301ef2ada3d8.ctex"]
+source_file="res://Assets/Art/Characters/PA/programmerarthony1.png"
+dest_files=["res://.godot/imported/programmerarthony1.png-8ca76d8e9b80d06a0d42f8c84098987c.ctex"]
 
 [params]
 

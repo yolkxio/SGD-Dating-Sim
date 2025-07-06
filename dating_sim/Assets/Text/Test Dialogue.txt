@@ -1,6 +1,7 @@
-[a'normal']This is a test Dialogue <>
-[a'angry', !24, @10{]Woah![}] this is really something [] <>
-[!24{]This is wavy text[}#400] now slower [#250] and super slow words [$60]
+[a'entrance']
+[a'idle']This is a test Dialogue <>
+[a'confused', !24, @10{]Woah![}] this is [a'angry']really something [] <>
+[a'idle', !24{]This is wavy text[}#400] now slower [#250] and super slow words [$60]
 PAUSE! [] pause test <>
 yup testing that this is back to normal <>
 Normal text [%3{]this text jitters[}] back to normal <>

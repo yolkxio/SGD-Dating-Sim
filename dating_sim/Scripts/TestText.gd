@@ -23,6 +23,10 @@ var banished_labels: Array = []
 var text_container: Control
 var choice_vbox: VBoxContainer
 var audio_player: AudioStreamPlayer
+var current_character_image_key: String = ""
+var entrance_completed: bool = false
+var is_entrance_playing: bool = false
+var processed_entrance_positions: Array = []
 var is_word_mode: bool = false
 var current_segment_word_positions: Array = []
 var next_text_position: Vector2 = Vector2.ZERO
@@ -104,6 +108,7 @@ func parse_text(content: String):
 	full_dialogue_segments.clear()
 	current_segment_index = 0
 	var raw_segments = content.split("<>")
+	@warning_ignore("unused_variable")
 	var choice_sequence_detected = false
 	var i = 0
 	
@@ -176,9 +181,9 @@ func find_effects(segment_text: String) -> Dictionary:
 	var i = 0
 	
 	while i < segment_text.length():
-		var char = segment_text[i]
+		var chara = segment_text[i]
 		
-		if char == "[":
+		if chara == "[":
 			var end_bracket = segment_text.find("]", i)
 			if end_bracket != -1:
 				var effect_content = segment_text.substr(i + 1, end_bracket - i - 1)
@@ -296,8 +301,10 @@ func start_next():
 	if current_segment_index >= full_dialogue_segments.size():
 		print("All dialogue segments completed!")
 		return
-	if is_typing:
+	if is_typing or is_entrance_playing:
 		return
+	if current_segment_index == 0:
+		entrance_completed = false
 	
 	var segment_data = full_dialogue_segments[current_segment_index]
 	
@@ -324,7 +331,11 @@ func start_next():
 	jitter_effects.clear()
 	wiggle_effects.clear()
 	shake_effects.clear()
+	processed_entrance_positions.clear()
+	await handle_entrance_if_needed()
 	
+	if entrance_completed:
+		update_character_talking_state()
 	if is_word_mode:
 		word_labels()
 	else:
@@ -336,13 +347,14 @@ func start_next():
 		await get_tree().create_timer(initial_wait).timeout
 	typing_timer.start()
 
-func get_char_width(char: String, font_size: int) -> float:
+func get_char_width(chara: String, font_size: int) -> float:
 	var temp_label = Label.new()
 	temp_label.add_theme_font_size_override("font_size", font_size)
 	temp_label.text = char
 	add_child(temp_label)
 	temp_label.force_update_transform()
-	var size = temp_label.get_theme_font("font").get_string_size(char, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
+	@warning_ignore("unused_variable")
+	var fsize = temp_label.get_theme_font("font").get_string_size(chara, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
 	remove_child(temp_label)
 	temp_label.queue_free()
 	return size.x
@@ -354,7 +366,8 @@ func get_word_width(word: String, font_size: int) -> float:
 	add_child(temp_label)
 	
 	temp_label.force_update_transform()
-	var size = temp_label.get_theme_font("font").get_string_size(word, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
+	@warning_ignore("unused_variable")
+	var fsize = temp_label.get_theme_font("font").get_string_size(word, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
 	
 	remove_child(temp_label)
 	temp_label.queue_free()
@@ -367,8 +380,8 @@ func character_labels():
 	var line_height = font_size * 1.2
 	
 	for i in range(current_segment_text.length()):
-		var char = current_segment_text[i]
-		if char == "\n":
+		var chara = current_segment_text[i]
+		if chara == "\n":
 			y_position += line_height
 			x_position = 0.0
 			continue
@@ -388,7 +401,7 @@ func character_labels():
 		text_container.add_child(char_label)
 		text_labels.append(char_label)
 		
-		var actual_width = get_char_width(char, font_size)
+		var actual_width = get_char_width(chara, font_size)
 		x_position += actual_width
 
 func word_labels():
@@ -403,9 +416,9 @@ func word_labels():
 	var i = 0
 	
 	while i < current_segment_text.length():
-		var char = current_segment_text[i]
+		var chara = current_segment_text[i]
 		
-		if char == " ":
+		if chara == " ":
 			if current_word != "":
 				words.append(current_word)
 				word_char_positions.append(word_start_pos)
@@ -413,7 +426,7 @@ func word_labels():
 			words.append(" ")
 			word_char_positions.append(i)
 			word_start_pos = i + 1
-		elif char == "\n":
+		elif chara == "\n":
 			if current_word != "":
 				words.append(current_word)
 				word_char_positions.append(word_start_pos)
@@ -542,8 +555,11 @@ func wm_switch(new_word_mode: bool, current_char_pos: int):
 	
 	for effect_change in current_segment_effects:
 		if effect_change.position == current_position:
+			@warning_ignore("unused_variable")
 			var old_ripple = current_ripple_frames
+			@warning_ignore("unused_variable")
 			var old_char_delay = current_char_delay
+			@warning_ignore("unused_variable")
 			var old_word_speed = current_word_speed
 
 func update_effects():
@@ -565,6 +581,7 @@ func update_effects():
 					if is_instance_valid(label):
 						label.scale = Vector2.ONE
 			else:
+				@warning_ignore("unused_variable")
 				var old_ripple = current_ripple_frames
 				var old_char_delay = current_char_delay
 				var old_word_speed = current_word_speed
@@ -677,9 +694,9 @@ func cm_fromswitch():
 	var line_height = font_size * 1.2
 	
 	for i in range(current_segment_text.length()):
-		var char = current_segment_text[i]
+		var chara = current_segment_text[i]
 		
-		if char == "\n":
+		if chara == "\n":
 			y_position += line_height
 			x_position = next_text_position.x
 			continue
@@ -699,7 +716,7 @@ func cm_fromswitch():
 		text_container.add_child(char_label)
 		text_labels.append(char_label)
 		
-		var actual_width = get_char_width(char, font_size)
+		var actual_width = get_char_width(chara, font_size)
 		x_position += actual_width
 
 func wm_fromswitch():
@@ -713,9 +730,9 @@ func wm_fromswitch():
 	var word_start_pos = 0
 	
 	for i in range(current_segment_text.length()):
-		var char = current_segment_text[i]
+		var chara = current_segment_text[i]
 		
-		if char == " ":
+		if chara == " ":
 			if current_word != "":
 				words.append(current_word)
 				word_char_positions.append(word_start_pos)
@@ -723,7 +740,7 @@ func wm_fromswitch():
 			words.append(" ")
 			word_char_positions.append(i)
 			word_start_pos = i + 1
-		elif char == "\n":
+		elif chara == "\n":
 			if current_word != "":
 				words.append(current_word)
 				word_char_positions.append(word_start_pos)
@@ -734,7 +751,7 @@ func wm_fromswitch():
 		else:
 			if current_word == "":
 				word_start_pos = i
-			current_word += char
+			current_word += chara
 	
 	if current_word != "":
 		words.append(current_word)
@@ -767,6 +784,9 @@ func wm_fromswitch():
 		x_position += actual_width
 
 func _render_timer():
+	if is_entrance_playing:
+		return
+	
 	var effective_char_delay = current_char_delay if current_char_delay > 0 else dialogue_data.integers["DelayBetweenCharacters"]
 	
 	if effective_char_delay > 0 or not is_word_mode:
@@ -774,11 +794,11 @@ func _render_timer():
 		if current_position < text_labels.size():
 			update_effects()
 			var char_label = text_labels[current_position]
-			var char = current_segment_text[current_position]
+			var chara = current_segment_text[current_position]
 			char_label.modulate.a = 1.0
 			apply_effects_to_current_position(current_position)
 			
-			if char != " " and char != "\n":
+			if chara != " " and chara != "\n":
 				play_sound()
 			
 			current_position += 1
@@ -809,16 +829,18 @@ func _render_timer():
 		else:
 			finish_current()
 
-func apply_effects_to_current_position(position: int):
-	var text_pos = position
-	if is_word_mode and position < current_segment_word_positions.size():
-		text_pos = current_segment_word_positions[position]
+func apply_effects_to_current_position(positiont: int):
+	var text_pos = positiont
+	if is_word_mode and positiont < current_segment_word_positions.size():
+		text_pos = current_segment_word_positions[positiont]
 	
 	for effect_change in current_segment_effects:
 		if effect_change.position <= text_pos:
 			var image_key = effect_change.effects.get("change_image", "")
 			if image_key != "":
-				change_image(image_key)
+				if image_key == "entrance" and effect_change.position in processed_entrance_positions:
+					continue
+				change_character_image(image_key)
 	
 	var current_ripple_value = 0
 	for effect_change in current_segment_effects:
@@ -830,8 +852,8 @@ func apply_effects_to_current_position(position: int):
 			elif effect_change.get("type") == "permanent":
 				current_ripple_value = effect_change.effects.get("ripple", 0)
 	
-	if current_ripple_value > 0 and position < text_labels.size():
-		ripple_targeted(text_labels[position], current_ripple_value)
+	if current_ripple_value > 0 and positiont < text_labels.size():
+		ripple_targeted(text_labels[positiont], current_ripple_value)
 	
 	var in_zone = false
 	var zone_jitter = 0
@@ -849,13 +871,13 @@ func apply_effects_to_current_position(position: int):
 				in_zone = false
 	if in_zone:
 		if zone_jitter > 0:
-			apply_jitter_to_position(position, zone_jitter)
+			apply_jitter_to_position(positiont, zone_jitter)
 		
 		if zone_wiggle > 0:
-			apply_wiggle_to_position(position, zone_wiggle)
+			apply_wiggle_to_position(positiont, zone_wiggle)
 		
 		if zone_shake > 0:
-			apply_shake_to_position(position, zone_shake)
+			apply_shake_to_position(positiont, zone_shake)
 
 func ripple_targeted(label: Label, ripple_frames: int):
 	var ripple_data = {
@@ -888,42 +910,97 @@ func ripple_effect_targeted():
 				var scale_multiplier = 1.0 + ripple_strength
 				ripple_data.label.scale = Vector2(scale_multiplier, scale_multiplier)
 
-func apply_jitter_to_position(position: int, intensity: int):
-	if position < text_labels.size() and is_instance_valid(text_labels[position]):
+func apply_jitter_to_position(positiont: int, intensity: int):
+	if positiont < text_labels.size() and is_instance_valid(text_labels[positiont]):
 		var jitter_data = {
-			"label": text_labels[position],
+			"label": text_labels[positiont],
 			"intensity": intensity,
 			"active": true
 		}
 		jitter_effects.append(jitter_data)
 
-func apply_shake_to_position(position: int, frames: int, intensity: int = 3):
-	if position < text_labels.size() and is_instance_valid(text_labels[position]):
+func apply_shake_to_position(positiont: int, frames: int, intensity: int = 3):
+	if positiont < text_labels.size() and is_instance_valid(text_labels[positiont]):
 		var shake_data = {
-			"label": text_labels[position],
+			"label": text_labels[positiont],
 			"start_time": Time.get_ticks_msec(),
 			"duration": frames * (1000.0 / 60.0),
 			"intensity": intensity,
-			"original_pos": text_labels[position].position
+			"original_pos": text_labels[positiont].position
 		}
 		shake_effects.append(shake_data)
 
-func apply_wiggle_to_position(position: int, intensity: int):
-	if position < text_labels.size() and is_instance_valid(text_labels[position]):
+func apply_wiggle_to_position(positiont: int, intensity: int):
+	if positiont < text_labels.size() and is_instance_valid(text_labels[positiont]):
 		var wiggle_data = {
-			"label": text_labels[position],
+			"label": text_labels[positiont],
 			"intensity": intensity,
 			"active": true
 		}
 		wiggle_effects.append(wiggle_data)
 
-func change_image(image_key: String):
+func change_character_image(image_key: String):
 	if character_data:
-		var character_texture = character_data.character_images.get(image_key)
-		if character_texture:
-			var character_rect = $Character
-			if character_rect and character_rect is TextureRect:
-				character_rect.texture = character_texture
+		if image_key == "entrance":
+			if not entrance_completed:
+				var entrance_texture = character_data.character_images.get("entrance")
+				if entrance_texture:
+					await handle_entrance_fade(entrance_texture)
+					entrance_completed = true 
+			return
+		
+		var character_image_array = character_data.character_images.get(image_key)
+		if character_image_array and character_image_array is Array and character_image_array.size() >= 2:
+			current_character_image_key = image_key
+			if entrance_completed:
+				update_character_talking_state()
+
+func handle_entrance_fade(entrance_texture: Texture2D):
+	is_entrance_playing = true
+	
+	var character_rect = $Character
+	if character_rect and character_rect is TextureRect:
+		character_rect.texture = entrance_texture
+		character_rect.modulate.a = 0.0
+		var tween = create_tween()
+		tween.tween_property(character_rect, "modulate:a", 1.0, 1)
+		await tween.finished
+	
+	is_entrance_playing = false
+	entrance_completed = true
+
+func handle_entrance_if_needed():
+	var entrance_found = false
+	
+	for effect_change in current_segment_effects:
+		if effect_change.position == 0:
+			var image_key = effect_change.effects.get("change_image", "")
+			if image_key == "entrance":
+				entrance_found = true
+				var entrance_texture = character_data.character_images.get("entrance")
+				if entrance_texture:
+					await handle_entrance_fade(entrance_texture)
+					processed_entrance_positions.append(0)
+				return
+	
+	if not entrance_found:
+		entrance_completed = true
+
+func update_character_talking_state():
+	if is_entrance_playing or not entrance_completed:
+		return
+		
+	if current_character_image_key == "" or not character_data:
+		return
+		
+	var character_image_array = character_data.character_images.get(current_character_image_key)
+	if character_image_array and character_image_array is Array and character_image_array.size() >= 2:
+		var character_rect = $Character
+		if character_rect and character_rect is TextureRect:
+			if waiting_for_input:
+				character_rect.texture = character_image_array[0]
+			else:
+				character_rect.texture = character_image_array[1]
 
 func _update_effects():
 	var current_time = Time.get_ticks_msec()
@@ -967,6 +1044,8 @@ func display_choices():
 	clear_choice_buttons()
 	show_choice_container()
 	create_choice_buttons()
+	waiting_for_input = true
+	update_character_talking_state()
 
 func show_choice_container():
 	choice_container.visible = true
@@ -1046,6 +1125,7 @@ func finish_current():
 			return
 	
 	waiting_for_input = true
+	update_character_talking_state()
 
 func next():
 	if not waiting_for_input:
@@ -1053,6 +1133,7 @@ func next():
 	
 	if text_container:
 		for i in range(text_container.get_child_count()):
+			@warning_ignore("unused_variable")
 			var child = text_container.get_child(i)
 	
 	for label in banished_labels:
