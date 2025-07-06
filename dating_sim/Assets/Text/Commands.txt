@@ -3,3 +3,4 @@
 # sets word speed for wordf by word rendering, if it was previously zero that is really bad, like actually something is broken if it was previously 0, it renders faster the higher the number
 $ delay, works somewhat well, goes by frames, pauses start on the next possible word, so don't use with character by character
 : starts choices, next segments will be interpretted as choices and made into buttons, :number uses that number index for the array of dialogue text files
+a'' changes the character state based on the keys 
