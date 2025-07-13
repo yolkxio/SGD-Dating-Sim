@@ -2,6 +2,7 @@ extends Control
 
 @export var dialogue_data: DialogueData
 @export var character_data: CharacterData
+@export var name_tag: NameTag
 
 var choice_mode: bool = false
 var choice_options: Array = []
@@ -42,6 +43,9 @@ var effect_update_timer: Timer
 var jitter_effects: Array = []
 var wiggle_effects: Array = []
 var icon_button: TextureButton
+var super_pause_active: bool = false
+var super_pause_word_count: int = 0
+var waiting_for_super_pause_input: bool = false
 
 func _ready():
 	setup_choice()
@@ -49,6 +53,7 @@ func _ready():
 	typing_system()
 	dialogue_box()
 	connect_button()
+	setup_name_tag()
 
 func typing_system():
 	typing_timer = Timer.new()
@@ -89,6 +94,17 @@ func setup_choice():
 
 func set_character(character: CharacterData):
 	character_data = character
+	
+	# Update the name tag when character changes
+	if name_tag:
+		name_tag.set_character(character_data)
+
+func setup_name_tag():
+	if not name_tag:
+		name_tag = $NameTag as NameTag  # Fallback path
+	
+	if name_tag and character_data:
+		name_tag.set_character(character_data)
 
 func load_text():
 	var file_path = dialogue_data.text_file_path
@@ -230,7 +246,8 @@ func parse_effects(effect_str: String) -> Dictionary:
 		"jitter": 0,
 		"shake": 0,
 		"wiggle": 0,
-		"change_image": ""
+		"change_image": "",
+		"super_pause": false
 	}
 	
 	var effect_parts = effect_str.split(",")
@@ -273,6 +290,8 @@ func start_effects(effect_str: String, effects: Dictionary):
 		var number_str = effect_str.substr(1)
 		var wiggle_intensity = number_str.to_int() if number_str != "" else 5
 		effects["wiggle"] = wiggle_intensity
+	elif effect_str.begins_with("*") and effect_str.length() == 1:
+		effects["super_pause"] = true
 	elif effect_str.begins_with("a'") and effect_str.ends_with("'"):
 		var image_key = effect_str.substr(2, effect_str.length() - 3)
 		effects["change_image"] = image_key
@@ -319,6 +338,9 @@ func start_next():
 	current_word_index = 0
 	is_typing = true
 	waiting_for_input = false
+	waiting_for_super_pause_input = false
+	super_pause_active = false
+	super_pause_word_count = 0
 	next_text_position = Vector2.ZERO
 	current_ripple_frames = dialogue_data.integers.get("RippleFrames")
 	current_char_delay = dialogue_data.integers.get("DelayBetweenCharacters")
@@ -828,6 +850,21 @@ func _render_timer():
 				play_sound()
 			
 			current_word_index += 1
+			
+			var word_char_position = current_segment_word_positions[current_word_index - 1] if (current_word_index - 1) < current_segment_word_positions.size() else -1
+			for effect_change in current_segment_effects:
+				if effect_change.position == word_char_position and effect_change.effects.get("super_pause", false):
+					super_pause_active = true
+					super_pause_word_count = 0
+					break
+					
+			if super_pause_active:
+				super_pause_word_count += 1
+				if super_pause_word_count >= 1:
+					waiting_for_super_pause_input = true
+					typing_timer.stop()
+					update_character_talking_state()
+					return
 		else:
 			finish_current()
 
@@ -1167,6 +1204,12 @@ func skip():
 func _button():
 	if choice_mode:
 		return
+	elif waiting_for_super_pause_input:
+		waiting_for_super_pause_input = false
+		super_pause_active = false
+		super_pause_word_count = 0
+		update_character_talking_state()
+		typing_timer.start()
 	elif is_typing:
 		skip()
 	elif waiting_for_input:
@@ -1176,6 +1219,12 @@ func _input(event):
 	if event.is_action_pressed("ui_accept"):
 		if choice_mode:
 			return
+		elif waiting_for_super_pause_input:
+			waiting_for_super_pause_input = false
+			super_pause_active = false
+			super_pause_word_count = 0
+			update_character_talking_state()
+			typing_timer.start()
 		elif is_typing:
 			skip()
 		elif waiting_for_input:

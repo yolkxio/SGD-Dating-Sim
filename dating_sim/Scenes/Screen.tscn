@@ -1,10 +1,12 @@
-[gd_scene load_steps=7 format=3 uid="uid://cuysm2kox8jt8"]
+[gd_scene load_steps=9 format=3 uid="uid://cuysm2kox8jt8"]
 
 [ext_resource type="Script" uid="uid://bu244lsn5ye7o" path="res://Scripts/TestText.gd" id="1_q8odg"]
 [ext_resource type="Resource" uid="uid://drrecr43opomx" path="res://Scripts/Resources/Test.tres" id="2_w8lkc"]
 [ext_resource type="Resource" uid="uid://bfxfpkcpwolcg" path="res://Scripts/Resources/PA.tres" id="3_c5ivj"]
 [ext_resource type="Texture2D" uid="uid://buh28sserylog" path="res://Assets/Art/UI/TestButton1.png" id="3_dw3bs"]
+[ext_resource type="Script" uid="uid://bh608r6pdub1" path="res://Scenes/NameTag.gd" id="4_53dy5"]
 [ext_resource type="Texture2D" uid="uid://c2uaqa3vtuqbq" path="res://Assets/Art/UI/TestButton2.png" id="4_c5ivj"]
+[ext_resource type="FontFile" uid="uid://b41entevbocrc" path="res://Fonts/FiraCode-Light.otf" id="5_3hbsd"]
 [ext_resource type="Texture2D" uid="uid://cg8r3h5uriu6m" path="res://Assets/Art/UI/TestButton3.png" id="5_53dy5"]
 
 [node name="Screen" type="Control"]
@@ -45,6 +47,31 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="NameTag" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.1
+anchor_top = 0.7
+anchor_right = 0.9
+anchor_bottom = 0.75
+script = ExtResource("4_53dy5")
+
+[node name="Panel" type="Panel" parent="NameTag"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="NameTag"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("5_3hbsd")
 
 [node name="TextContainer" type="Control" parent="."]
 layout_mode = 1

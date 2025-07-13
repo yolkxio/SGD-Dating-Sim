@@ -1,11 +1,11 @@
+Label
+Panel
+Control
 TextureRect
 VBoxContainer
-Control
 ColorRect
 TextureButton
 Button
 RichTextLabel
-Label
 MarginContainer
-Panel
 NinePatchRect
