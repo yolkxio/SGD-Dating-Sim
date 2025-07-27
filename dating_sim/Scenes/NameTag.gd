@@ -2,9 +2,9 @@ extends Control
 class_name NameTag
 
 @export var character_data: CharacterData
-@export var padding: Vector2 = Vector2(20, 10)  # Horizontal and vertical padding
-@export var min_width: float = 100.0  # Minimum width for the name tag
-@export var font_size: int = 32  # Font size for the name
+@export var padding: Vector2 = Vector2(20, 10)
+@export var min_width: float = 100.0
+@export var font_size: int = 32
 
 var name_panel: Panel
 var name_label: Label
@@ -33,28 +33,24 @@ func update_name_tag():
 	if not character_data or not name_label or not name_panel:
 		return
 	
-	# Set the character name
 	var character_name = character_data.character_name
+	
 	if character_name.is_empty():
 		character_name = "Unknown"
 	
 	name_label.text = character_name
-	
-	# Calculate the required size
 	calculate_and_resize()
 
 func calculate_and_resize():
 	if not name_label or not name_panel:
 		return
 	
-	# Get the font
 	var font = name_label.get_theme_font("font")
 	if not font:
 		font = ThemeDB.fallback_font
 		if not font:
 			return
 	
-	# Get the text size
 	var text_size = font.get_string_size(
 		name_label.text, 
 		HORIZONTAL_ALIGNMENT_LEFT, 
@@ -62,11 +58,8 @@ func calculate_and_resize():
 		font_size
 	)
 	
-	# Calculate the required panel size with padding
 	var required_width = max(text_size.x + padding.x * 2, min_width)
 	var required_height = text_size.y + padding.y * 2
-	
-	# Resize everything
 	name_panel.set_deferred("size", Vector2(required_width, required_height))
 	name_label.set_deferred("size", Vector2(required_width, required_height))
 	name_label.set_deferred("position", Vector2.ZERO)

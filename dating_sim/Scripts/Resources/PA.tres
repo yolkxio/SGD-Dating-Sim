@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="CharacterData" load_steps=10 format=3 uid="uid://bfxfpkcpwolcg"]
+[gd_resource type="Resource" script_class="CharacterData" load_steps=12 format=3 uid="uid://bfxfpkcpwolcg"]
 
 [ext_resource type="Texture2D" uid="uid://dj2tg3gejqijs" path="res://Assets/Art/Characters/PA/dummy-idle.PNG" id="1_jkc0y"]
 [ext_resource type="Script" uid="uid://bhirb0q308e7m" path="res://Scripts/Classes/CharacterBase.gd" id="1_xq1q5"]
@@ -9,6 +9,8 @@
 [ext_resource type="AudioStream" uid="uid://cfk0hp41oartf" path="res://Assets/Sounds/blipSelect (2).wav" id="5_yd68a"]
 [ext_resource type="Texture2D" uid="uid://c6fb62kqg4qpt" path="res://Assets/Art/Characters/PA/dummy-angry-talk.PNG" id="6_yxcug"]
 [ext_resource type="Texture2D" uid="uid://c3saov08a4trq" path="res://Assets/Art/Characters/PA/dummy-entrance.PNG" id="7_7voqb"]
+[ext_resource type="Texture2D" uid="uid://df5qxmqs6atbf" path="res://Demo/Assets/Art/scooter-asset.png" id="8_amcte"]
+[ext_resource type="AudioStream" uid="uid://ihtq5vgr061r" path="res://Demo/Assets/Audio/bell.mp3" id="10_4juaj"]
 
 [resource]
 script = ExtResource("1_xq1q5")
@@ -19,9 +21,11 @@ character_images = {
 "angry": [ExtResource("5_y86ds"), ExtResource("6_yxcug")],
 "confused": [ExtResource("3_amcte"), ExtResource("4_4juaj")],
 "entrance": ExtResource("7_7voqb"),
-"idle": [ExtResource("1_jkc0y"), ExtResource("2_wpler")]
+"idle": [ExtResource("1_jkc0y"), ExtResource("2_wpler")],
+"scooter": ExtResource("8_amcte")
 }
 character_sounds = {
+"bell": ExtResource("10_4juaj"),
 "talking": ExtResource("5_yd68a")
 }
 character_variables = {

@@ -295,6 +295,12 @@ func start_effects(effect_str: String, effects: Dictionary):
 	elif effect_str.begins_with("a'") and effect_str.ends_with("'"):
 		var image_key = effect_str.substr(2, effect_str.length() - 3)
 		effects["change_image"] = image_key
+	elif effect_str.begins_with("<'") and effect_str.ends_with("'"):
+		var sound_key = effect_str.substr(2, effect_str.length() - 3)
+		effects["play_sound"] = sound_key
+	elif effect_str.begins_with(">'") and effect_str.ends_with("'"):
+		var popup_image_key = effect_str.substr(2, effect_str.length() - 3)
+		effects["popup_image"] = popup_image_key
 
 func play_sound():
 	if character_data and audio_player:
@@ -874,12 +880,18 @@ func apply_effects_to_current_position(position: int):
 		text_pos = current_segment_word_positions[position]
 	
 	for effect_change in current_segment_effects:
-		if effect_change.position <= text_pos:
+		if effect_change.position == text_pos:
 			var image_key = effect_change.effects.get("change_image", "")
 			if image_key != "":
 				if image_key == "entrance" and effect_change.position in processed_entrance_positions:
 					continue
 				change_character_image(image_key)
+			var sound_key = effect_change.effects.get("play_sound", "")
+			if sound_key != "":
+				play_effect_sound(sound_key)
+			var popup_key = effect_change.effects.get("popup_image", "")
+			if popup_key != "":
+				show_popup_image(popup_key)
 	
 	var current_ripple_value = 0
 	for effect_change in current_segment_effects:
@@ -987,12 +999,57 @@ func change_character_image(image_key: String):
 					await handle_entrance_fade(entrance_texture)
 					entrance_completed = true 
 			return
-		
 		var character_image_array = character_data.character_images.get(image_key)
 		if character_image_array and character_image_array is Array and character_image_array.size() >= 2:
 			current_character_image_key = image_key
 			if entrance_completed:
 				update_character_talking_state()
+
+func play_effect_sound(sound_key: String):
+	if character_data and character_data.character_sounds.has(sound_key):
+		var sound_stream = character_data.character_sounds.get(sound_key)
+		if sound_stream:
+			var effect_audio_player = AudioStreamPlayer.new()
+			add_child(effect_audio_player)
+			effect_audio_player.stream = sound_stream
+			effect_audio_player.play()
+			effect_audio_player.finished.connect(func(): 
+				effect_audio_player.queue_free()
+			)
+
+func show_popup_image(image_key: String):
+	if character_data and character_data.character_images.has(image_key):
+		var popup_texture = character_data.character_images.get(image_key)
+		if popup_texture:
+			var popup_image = TextureRect.new()
+			popup_image.texture = popup_texture
+			popup_image.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
+			popup_image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			var screen_size = get_viewport().get_visible_rect().size
+			var image_size = popup_texture.get_size()
+			var scale_factor = min(screen_size.x / image_size.x, screen_size.y / image_size.y) * 0.8  
+			popup_image.custom_minimum_size = image_size * scale_factor
+			popup_image.size = image_size * scale_factor
+			popup_image.position = (screen_size - popup_image.size) / 2
+			popup_image.scale = Vector2(0.1, 0.1)
+			popup_image.modulate.a = 0.0
+			popup_image.pivot_offset = popup_image.size / 2
+			get_tree().current_scene.add_child(popup_image)
+			_animate_popup(popup_image)
+
+func _animate_popup(popup_image: TextureRect):
+	var tween = get_tree().create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(popup_image, "scale", Vector2.ONE, 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+	tween.tween_property(popup_image, "modulate:a", 1.0, 0.2)
+	await get_tree().create_timer(0.8).timeout
+	if is_instance_valid(popup_image):
+		var fade_tween = get_tree().create_tween()
+		fade_tween.tween_property(popup_image, "modulate:a", 0.0, 0.4)
+		fade_tween.finished.connect(func(): 
+			if is_instance_valid(popup_image):
+				popup_image.queue_free()
+		)
 
 func handle_entrance_fade(entrance_texture: Texture2D):
 	is_entrance_playing = true

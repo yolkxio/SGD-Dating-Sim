@@ -1,9 +1,9 @@
-res://Scenes/Screen.tscn
+res://Scenes/ProgrammerArthony.tscn
 res://Themes/TestTheme.tres
 res://Scripts/Resources/Test.tres
 res://Scripts/Resources/PA.tres
-res://Scenes/NameTag.gd
-res://Scripts/TestText.gd
-res://Scenes/ProgrammerArthony.tscn
-res://Assets/Text/Test Dialogue.txt
 res://Assets/Text/Commands.txt
+res://Scripts/TestText.gd
+res://Assets/Text/Test Dialogue.txt
+res://Scenes/Screen.tscn
+res://Demo/Demo.tscn
