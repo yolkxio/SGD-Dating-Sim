@@ -12,3 +12,5 @@ grow_vertical = 2
 
 [node name="Screen" parent="." instance=ExtResource("1_dichd")]
 layout_mode = 1
+
+[editable path="Screen"]

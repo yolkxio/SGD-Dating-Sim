@@ -4,7 +4,7 @@
 [a'idle', !24{]This is wavy text[}#400] now slower [#250] and super slow words [$60]
 PAUSE! [] pause test <>
 sound test [<'bell'] Did you hear that? [>'scooter'] scooter go! <>
-yup testing that this is back to normal, now SUPER PAUSE [*] super pause test [] <>
+yup testing that this is back to normal, now SUPER [*] PAUSE super pause test [] <>
 Normal text [%3{]this text jitters[}] back to normal <>
 [^30{]This shakes for 30 frames[}] normal again  <>
 [&{]This wiggles with rotation[}] normal text <>
