@@ -19,7 +19,6 @@ func prepare_segment(segment_text: String, segment_effects: Array):
 	current_segment_effects = segment_effects
 	current_position = 0
 	
-	# Clear old text
 	clear_all_text()
 	
 	# Create ALL labels at once, invisible
@@ -97,7 +96,7 @@ func show_next_word() -> bool:
 		text_labels[current_position].modulate.a = 1.0
 		current_position += 1
 	
-	# If we didn't advance at all, we're probably at the end
+	# If we didn't advance at all, we're at the end
 	if current_position == start_position and current_position < text_labels.size():
 		# Force advance to prevent infinite loop
 		text_labels[current_position].modulate.a = 1.0

@@ -37,7 +37,6 @@ func setup_name_tag():
 func set_character(character: CharacterData):
 	character_data = character
 	
-	# Update the name tag when character changes
 	if name_tag:
 		name_tag.set_character(character_data)
 

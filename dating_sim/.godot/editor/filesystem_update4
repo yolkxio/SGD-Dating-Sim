@@ -2,5 +2,7 @@ res://Scenes/ProgrammerArthony.tscn
 res://Themes/TestTheme.tres
 res://Scripts/Resources/Test.tres
 res://Scripts/Resources/PA.tres
-res://Scripts/EffectManager.gd
 res://Scripts/TestText.gd
+res://Scripts/TextManager.gd
+res://Scripts/CharacterManager.gd
+res://Scripts/EffectManager.gd

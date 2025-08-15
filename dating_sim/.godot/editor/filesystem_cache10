@@ -1,5 +1,5 @@
 ea4bc82a6ad023ab7ee23ee620429895
-::res://::1755205437
+::res://::1755300495
 icon.svg::CompressedTexture2D/CompressedTexture2D::4810510679844369055::1750013524::1750013561::1::::<><><>0<>0<>e78e455df3828e743282a69f3092d1f2<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
 ::res://Assets/::1751580679
 ::res://Assets/Art/::1750044329
@@ -39,11 +39,11 @@ random.wav::AudioStreamWAV/AudioStreamWAV::1503124014716974085::1751580679::1751
 Shoot.wav::AudioStreamWAV/AudioStreamWAV::5648089655589246145::1751580679::1751580806::1::::<><><>0<>0<>f482b25fe16dbf298f986eda3994b0b7<>res://.godot/imported/Shoot.wav-683b7e537311ed2cc644d784084bb0eb.sample::
 ::res://Assets/Text/::1755204867
 Commands.txt::TextFile/TextFile::-1::1753639633::0::1::::<><><>0<>0<><>::
-Test Dialogue.txt::TextFile::-1::1755204867::0::1::::<><><>0<>0<><>::
+Test Dialogue.txt::TextFile/TextFile::-1::1755204867::0::1::::<><><>0<>0<><>::
 testchoiceA.txt::TextFile/TextFile::-1::1751580679::0::1::::<><><>0<>0<><>::
 testchoiceB.txt::TextFile/TextFile::-1::1751580679::0::1::::<><><>0<>0<><>::
 ::res://Demo/::1755205392
-Demo.tscn::PackedScene::6096253687091903860::1755205392::0::1::::<><><>0<>0<><>::uid://cuysm2kox8jt8::::res://Scenes/Screen.tscn
+Demo.tscn::PackedScene/PackedScene::6096253687091903860::1755205392::0::1::::<><><>0<>0<><>::uid://cuysm2kox8jt8::::res://Scenes/Screen.tscn
 ::res://Demo/Assets/::1753577932
 ::res://Demo/Assets/Art/::1753578142
 cat-asset.png::CompressedTexture2D/CompressedTexture2D::6602152388907399726::1753577932::1753578141::1::::<><><>0<>0<>571357c76bbe64b0cdd2db3413238bea<>res://.godot/imported/cat-asset.png-37fd143eb4ac9c1c6676a20e62d032f7.ctex::
@@ -72,20 +72,20 @@ FogtwoNo5.otf::FontFile/FontFile::1228882279734461191::1750110284::1750110365::1
 Minecraft.ttf::FontFile/FontFile::5946830445548822681::1750108226::1750110069::1::::<><><>0<>0<>f0a03eba5d6c7cb987c6ea24e11fd48f<>res://.godot/imported/Minecraft.ttf-73ceaa08946f79e0d3c76746bd74b6b1.fontdata::
 ThickTestFont.ttf::FontFile/FontFile::6558831081518510105::1750024064::1751580806::1::::<><><>0<>0<>1cef187b55184403658691e2ab631fd9<>res://.godot/imported/ThickTestFont.ttf-e07b90c0a8e1365687376169e216b95a.fontdata::
 ThinTestFont.ttf::FontFile/FontFile::5818216806154400862::1750024083::1750027754::1::::<><><>0<>0<>2a457cb7ba6e341cb7f6af155c93f12f<>res://.godot/imported/ThinTestFont.ttf-3a3f8d20423c4becff47676d97ea4949.fontdata::
-::res://Scenes/::1755205392
+::res://Scenes/::1755205763
 NameTag.gd::GDScript/GDScript::86568120500747700::1752429755::0::1::::NameTag<>Control<><>0<>0<><>::
-ProgrammerArthony.tscn::PackedScene::4432233855736660678::1755205392::0::1::::<><><>0<>0<><>::uid://cuysm2kox8jt8::::res://Scenes/Screen.tscn
-Screen.tscn::PackedScene::6227279075887577347::1755205392::0::1::::<><><>0<>0<><>::uid://bu244lsn5ye7o::::res://Scripts/TestText.gd<>uid://drrecr43opomx::::res://Scripts/Resources/Test.tres<>uid://bfxfpkcpwolcg::::res://Scripts/Resources/PA.tres<>uid://buh28sserylog::::res://Assets/Art/UI/TestButton1.png<>uid://bh608r6pdub1::::res://Scenes/NameTag.gd<>uid://c2uaqa3vtuqbq::::res://Assets/Art/UI/TestButton2.png<>uid://b41entevbocrc::::res://Fonts/FiraCode-Light.otf<>uid://cg8r3h5uriu6m::::res://Assets/Art/UI/TestButton3.png
-::res://Scripts/::1755205389
-CharacterManager.gd::GDScript::7429046353588888956::1755205027::0::1::::CharacterManager<>Node<><>0<>0<><>::
-EffectManager.gd::GDScript::8037529835892046908::1755205048::0::1::::EffectManager<>Node<><>0<>0<><>::
-TestText.gd::GDScript::3847748942821862814::1755205389::0::1::::<>Control<><>0<>0<><>::
-TextManager.gd::GDScript::7315961030040153894::1755203272::0::1::::TextManager<>Node<><>0<>0<><>::
+ProgrammerArthony.tscn::PackedScene::4432233855736660678::1755205763::0::1::::<><><>0<>0<><>::uid://cuysm2kox8jt8::::res://Scenes/Screen.tscn
+Screen.tscn::PackedScene/PackedScene::6227279075887577347::1755205392::0::1::::<><><>0<>0<><>::uid://bu244lsn5ye7o::::res://Scripts/TestText.gd<>uid://drrecr43opomx::::res://Scripts/Resources/Test.tres<>uid://bfxfpkcpwolcg::::res://Scripts/Resources/PA.tres<>uid://buh28sserylog::::res://Assets/Art/UI/TestButton1.png<>uid://bh608r6pdub1::::res://Scenes/NameTag.gd<>uid://c2uaqa3vtuqbq::::res://Assets/Art/UI/TestButton2.png<>uid://b41entevbocrc::::res://Fonts/FiraCode-Light.otf<>uid://cg8r3h5uriu6m::::res://Assets/Art/UI/TestButton3.png
+::res://Scripts/::1755205763
+CharacterManager.gd::GDScript/GDScript::7429046353588888956::1755205027::0::1::::CharacterManager<>Node<><>0<>0<><>::
+EffectManager.gd::GDScript::8037529835892046908::1755205463::0::1::::EffectManager<>Node<><>0<>0<><>::
+TestText.gd::GDScript::3847748942821862814::1755205763::0::1::::<>Control<><>0<>0<><>::
+TextManager.gd::GDScript/GDScript::7315961030040153894::1755203272::0::1::::TextManager<>Node<><>0<>0<><>::
 ::res://Scripts/Classes/::1755195022
 CharacterBase.gd::GDScript/GDScript::2895292924970268020::1751580679::0::1::::CharacterData<>Resource<><>0<>0<><>::
-DialogueBase.gd::GDScript::6363026478002413528::1755195022::0::1::::DialogueData<>Resource<><>0<>0<><>::
-::res://Scripts/Resources/::1755193698
-PA.tres::Resource/CharacterData::2785176491133647654::1755193698::0::1::::<><><>0<>0<><>::uid://dj2tg3gejqijs::::res://Assets/Art/Characters/PA/dummy-idle.PNG<>uid://bhirb0q308e7m::::res://Scripts/Classes/CharacterBase.gd<>uid://eh52ghvs6ihr::::res://Assets/Art/Characters/PA/dummy-idle-talk.PNG<>uid://jsbpfqlxykho::::res://Assets/Art/Characters/PA/dummy-confuse.PNG<>uid://nnewv5b760uq::::res://Assets/Art/Characters/PA/dummy-confuse-talk.PNG<>uid://du5wye68vujv::::res://Assets/Art/Characters/PA/dummy-angry.PNG<>uid://cfk0hp41oartf::::res://Assets/Sounds/blipSelect (2).wav<>uid://c6fb62kqg4qpt::::res://Assets/Art/Characters/PA/dummy-angry-talk.PNG<>uid://c3saov08a4trq::::res://Assets/Art/Characters/PA/dummy-entrance.PNG<>uid://df5qxmqs6atbf::::res://Demo/Assets/Art/scooter-asset.png<>uid://ihtq5vgr061r::::res://Demo/Assets/Audio/bell.mp3
-Test.tres::Resource/DialogueData::8387814193291532799::1755193698::0::1::::<><><>0<>0<><>::uid://cwwkd7uw3ndoi::::res://Scripts/Classes/DialogueBase.gd
-::res://Themes/::1755193698
-TestTheme.tres::Theme::9152807526056086678::1755193698::0::1::::<><><>0<>0<><>::uid://c0pe8wboespth::::res://Fonts/ThickTestFont.ttf<>uid://b41entevbocrc::::res://Fonts/FiraCode-Light.otf<>uid://co5nge7anbeo1::::res://Fonts/ThinTestFont.ttf
+DialogueBase.gd::GDScript/GDScript::6363026478002413528::1755195022::0::1::::DialogueData<>Resource<><>0<>0<><>::
+::res://Scripts/Resources/::1755205463
+PA.tres::Resource/CharacterData::2785176491133647654::1755205463::0::1::::<><><>0<>0<><>::uid://dj2tg3gejqijs::::res://Assets/Art/Characters/PA/dummy-idle.PNG<>uid://bhirb0q308e7m::::res://Scripts/Classes/CharacterBase.gd<>uid://eh52ghvs6ihr::::res://Assets/Art/Characters/PA/dummy-idle-talk.PNG<>uid://jsbpfqlxykho::::res://Assets/Art/Characters/PA/dummy-confuse.PNG<>uid://nnewv5b760uq::::res://Assets/Art/Characters/PA/dummy-confuse-talk.PNG<>uid://du5wye68vujv::::res://Assets/Art/Characters/PA/dummy-angry.PNG<>uid://cfk0hp41oartf::::res://Assets/Sounds/blipSelect (2).wav<>uid://c6fb62kqg4qpt::::res://Assets/Art/Characters/PA/dummy-angry-talk.PNG<>uid://c3saov08a4trq::::res://Assets/Art/Characters/PA/dummy-entrance.PNG<>uid://df5qxmqs6atbf::::res://Demo/Assets/Art/scooter-asset.png<>uid://ihtq5vgr061r::::res://Demo/Assets/Audio/bell.mp3
+Test.tres::Resource/DialogueData::8387814193291532799::1755205463::0::1::::<><><>0<>0<><>::uid://cwwkd7uw3ndoi::::res://Scripts/Classes/DialogueBase.gd
+::res://Themes/::1755205463
+TestTheme.tres::Theme::9152807526056086678::1755205463::0::1::::<><><>0<>0<><>::uid://c0pe8wboespth::::res://Fonts/ThickTestFont.ttf<>uid://b41entevbocrc::::res://Fonts/FiraCode-Light.otf<>uid://co5nge7anbeo1::::res://Fonts/ThinTestFont.ttf

@@ -7,7 +7,7 @@ extends Control
 var effects_manager: EffectManager
 var character_manager: CharacterManager
 var text_manager: TextManager
-var render_segments: Array = []  # Array of RenderSegment
+var render_segments: Array = []
 var current_render_index: int = 0
 var typing_timer: Timer
 var choice_mode: bool = false
@@ -425,8 +425,6 @@ func apply_segment_effects(segment: RenderSegment):
 				character_manager.show_popup_image(popup_key)
 
 func apply_position_effects(position: int):
-	# Only apply effects to the newly revealed character(s)
-	# In word mode, we need to apply to all characters in the word that was just revealed
 	
 	if current_render_index >= render_segments.size():
 		return
@@ -436,22 +434,17 @@ func apply_position_effects(position: int):
 	var previous_pos = current_pos - 1
 	
 	if segment.is_word_mode:
-		# In word mode, find the start of the current word and apply effects to all characters in it
 		var word_start = previous_pos
 		
-		# Find the beginning of this word
 		while word_start > segment.start_pos and current_segment_text[word_start] != " " and current_segment_text[word_start] != "\n":
 			word_start -= 1
 		
-		# Skip the space/newline to get to the actual word start
 		if word_start > segment.start_pos and (current_segment_text[word_start] == " " or current_segment_text[word_start] == "\n"):
 			word_start += 1
 		
-		# Apply effects to all characters in this word
 		for char_pos in range(word_start, current_pos):
 			apply_single_character_effects(char_pos)
 	else:
-		# In character mode, just apply to the single character
 		if previous_pos >= 0:
 			apply_single_character_effects(previous_pos)
 
@@ -459,13 +452,11 @@ func apply_single_character_effects(char_pos: int):
 	# Apply effects to a single character position
 	var active_effects = get_active_effects_at_position(char_pos)
 	
-	# Apply ripple effect if active
 	if active_effects.get("ripple", 0) > 0:
 		var labels = text_manager.get_text_labels()
 		if char_pos < labels.size():
 			effects_manager.ripple_targeted(labels[char_pos], active_effects["ripple"])
 	
-	# Apply zone effects if active (these are continuous, so they get applied once and stay)
 	if active_effects.get("jitter", 0) > 0:
 		effects_manager.apply_jitter_to_position(char_pos, active_effects["jitter"])
 	
@@ -515,7 +506,6 @@ func get_active_effects_at_position(char_pos: int) -> Dictionary:
 	return active_effects
 
 func _on_entrance_completed():
-	# This gets called when entrance animation finishes
 	pass
 
 func display_choices():
@@ -572,10 +562,8 @@ func finish_current():
 	is_typing = false
 	typing_timer.stop()
 	
-	# Let text_manager finish rendering
 	text_manager.finish_rendering()
 	
-	# Handle waiting for input
 	waiting_for_input = true
 	character_manager.update_character_talking_state(true)
 
@@ -602,7 +590,7 @@ func _button():
 		super_pause_active = false
 		character_manager.update_character_talking_state(false)
 		
-		# Start rendering the current segment
+		# Start rendering
 		if current_render_index < render_segments.size():
 			var segment = render_segments[current_render_index]
 			apply_segment_effects(segment)
@@ -629,7 +617,7 @@ func _input(event):
 			super_pause_active = false
 			character_manager.update_character_talking_state(false)
 			
-			# Start rendering the current segment
+			# Start rendering
 			if current_render_index < render_segments.size():
 				var segment = render_segments[current_render_index]
 				apply_segment_effects(segment)

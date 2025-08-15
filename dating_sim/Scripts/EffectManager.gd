@@ -9,11 +9,9 @@ var dialogue_data: DialogueData
 var text_labels: Array = []
 var fps: float = 60.0
 
-# Effect timers
 var ripple_timer: Timer
 var effect_update_timer: Timer
 
-# Effect tracking arrays
 var ripple_positions: Array = []
 var shake_effects: Array = []
 var jitter_effects: Array = []
@@ -62,16 +60,16 @@ func find_effects(segment_text: String) -> Dictionary:
 						"type": "start_zone"
 					})
 				elif effect_content.begins_with("}"):
-					# Handle end zone, but also process any effects that come after }
+					# Handle end zone, but also process any effects that come after '}'
 					effects_data.append({
 						"position": clean_text.length(),
 						"effects": {},
 						"type": "end_zone"
 					})
 					
-					# If there are effects after the }, process them as permanent
+					# If there are effects after the '}', process them as permanent
 					if effect_content.length() > 1:
-						var remaining_effects = effect_content.substr(1)  # Skip the }
+						var remaining_effects = effect_content.substr(1)  # Skip the '}'
 						var new_effects = parse_effects(remaining_effects)
 						effects_data.append({
 							"position": clean_text.length(),
