@@ -2,7 +2,10 @@ res://Scenes/ProgrammerArthony.tscn
 res://Themes/TestTheme.tres
 res://Scripts/Resources/Test.tres
 res://Scripts/Resources/PA.tres
-res://Scripts/TestText.gd
-res://Scripts/TextManager.gd
-res://Scripts/CharacterManager.gd
+res://Scripts/MusicManager.gd
+res://Scripts/Classes/DialogueBase.gd
 res://Scripts/EffectManager.gd
+res://Scripts/TestText.gd
+res://Scenes/Screen.tscn
+res://Assets/Text/Test Dialogue.txt
+res://Demo/Demo.tscn

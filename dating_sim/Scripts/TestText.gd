@@ -7,6 +7,8 @@ extends Control
 var effects_manager: EffectManager
 var character_manager: CharacterManager
 var text_manager: TextManager
+var music_manager: MusicManager
+
 var render_segments: Array = []
 var current_render_index: int = 0
 var typing_timer: Timer
@@ -67,11 +69,19 @@ func _ready():
 	add_child(character_manager)
 	character_manager.initialize(dialogue_data, character_data, name_tag, $Character)
 	
+	music_manager = MusicManager.new()
+	add_child(music_manager)
+	music_manager.initialize(dialogue_data)
+	music_manager.set_music_library(dialogue_data.music_tracks)
+	
 	# Connect signals
 	effects_manager.effect_sound_requested.connect(character_manager.play_effect_sound)
 	effects_manager.character_image_change_requested.connect(character_manager.change_character_image)
 	effects_manager.popup_image_requested.connect(character_manager.show_popup_image)
 	character_manager.entrance_completed.connect(_on_entrance_completed)
+	effects_manager.music_change_requested.connect(music_manager.play_music)
+	effects_manager.music_volume_requested.connect(music_manager.set_music_volume)
+	effects_manager.music_stop_requested.connect(music_manager.stop_music)
 	
 	setup_choice()
 	typing_system()
@@ -433,6 +443,24 @@ func apply_position_effects(position: int):
 	var current_pos = text_manager.get_current_position()
 	var previous_pos = current_pos - 1
 	
+	for effect_change in current_segment_effects:
+		if effect_change.position == previous_pos:
+			var music_key = effect_change.effects.get("music_change", "")
+			if music_key != "":
+				var fade_duration = effect_change.effects.get("music_fade_duration", -1.0)
+				print("TestText: apply_position_effects - Playing music: '", music_key, "' with fade: ", fade_duration)
+				music_manager.play_music(music_key, fade_duration)
+			
+			var music_volume = effect_change.effects.get("music_volume", 999.0)
+			if music_volume != 999.0:
+				var fade_duration = effect_change.effects.get("music_fade_duration", 0.0)
+				music_manager.set_music_volume(music_volume, fade_duration)
+			
+			var music_stop = effect_change.effects.get("music_stop", false)
+			if music_stop:
+				var fade_duration = effect_change.effects.get("music_fade_duration", -1.0)
+				music_manager.stop_music(fade_duration)
+	
 	if segment.is_word_mode:
 		var word_start = previous_pos
 		
@@ -504,6 +532,18 @@ func get_active_effects_at_position(char_pos: int) -> Dictionary:
 	else:
 		print("  NOT IN ZONE")
 	return active_effects
+
+func play_background_music(track_key: String, fade_duration: float = -1):
+	"""Direct music control - useful for scene changes"""
+	music_manager.play_music(track_key, fade_duration)
+
+func stop_background_music(fade_duration: float = -1):
+	"""Stop background music"""
+	music_manager.stop_music(fade_duration)
+
+func set_music_volume(volume_db: float, fade_duration: float = 0.0):
+	"""Change music volume"""
+	music_manager.set_music_volume(volume_db, fade_duration)
 
 func _on_entrance_completed():
 	pass

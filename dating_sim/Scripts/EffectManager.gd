@@ -4,6 +4,9 @@ class_name EffectManager
 signal effect_sound_requested(sound_key: String)
 signal character_image_change_requested(image_key: String)
 signal popup_image_requested(image_key: String)
+signal music_change_requested(music_key: String, fade_duration: float)
+signal music_volume_requested(volume_db: float, fade_duration: float)
+signal music_stop_requested(fade_duration: float)
 
 var dialogue_data: DialogueData
 var text_labels: Array = []
@@ -105,7 +108,11 @@ func parse_effects(effect_str: String) -> Dictionary:
 		"shake": 0,
 		"wiggle": 0,
 		"change_image": "",
-		"super_pause": false
+		"super_pause": false,
+		"music_change": "",
+		"music_fade_duration": -1.0,
+		"music_volume": 999.0,
+		"music_stop": false
 	}
 	
 	var effect_parts = effect_str.split(",")
@@ -158,6 +165,28 @@ func start_effects(effect_str: String, effects: Dictionary):
 	elif effect_str.begins_with(">'") and effect_str.ends_with("'"):
 		var popup_image_key = effect_str.substr(2, effect_str.length() - 3)
 		effects["popup_image"] = popup_image_key
+	elif effect_str.begins_with("m'") and effect_str.ends_with("'"):
+		var music_content = effect_str.substr(2, effect_str.length() - 3)
+		if music_content.contains(":"):
+			var parts = music_content.split(":")
+			effects["music_change"] = parts[0]
+			effects["music_fade_duration"] = parts[1].to_float()
+		else:
+			effects["music_change"] = music_content
+	elif effect_str.begins_with("mv"):
+		var volume_str = effect_str.substr(2)
+		if volume_str.contains(":"):
+			var parts = volume_str.split(":")
+			effects["music_volume"] = parts[0].to_float()
+			effects["music_fade_duration"] = parts[1].to_float()
+		else:
+			effects["music_volume"] = volume_str.to_float()
+	elif effect_str == "mstop":
+		effects["music_stop"] = true
+	elif effect_str.begins_with("mstop:"):
+		var fade_time = effect_str.substr(6).to_float()
+		effects["music_stop"] = true
+		effects["music_fade_duration"] = fade_time
 
 func apply_effects_to_position(position: int, segment_effects: Array, current_segment_word_positions: Array, is_word_mode: bool, processed_entrance_positions: Array):
 	var text_pos = position
@@ -179,6 +208,21 @@ func apply_effects_to_position(position: int, segment_effects: Array, current_se
 			var popup_key = effect_change.effects.get("popup_image", "")
 			if popup_key != "":
 				popup_image_requested.emit(popup_key)
+			
+			var music_key = effect_change.effects.get("music_change", "")
+			if music_key != "":
+				var fade_duration = effect_change.effects.get("music_fade_duration", -1.0)
+				music_change_requested.emit(music_key, fade_duration)
+			
+			var music_volume = effect_change.effects.get("music_volume", 999.0)
+			if music_volume != 999.0:
+				var fade_duration = effect_change.effects.get("music_fade_duration", 0.0)
+				music_volume_requested.emit(music_volume, fade_duration)
+			
+			var music_stop = effect_change.effects.get("music_stop", false)
+			if music_stop:
+				var fade_duration = effect_change.effects.get("music_fade_duration", -1.0)
+				music_stop_requested.emit(fade_duration)
 	
 	# Apply ripple effect
 	var current_ripple_value = 0

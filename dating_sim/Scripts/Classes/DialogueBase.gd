@@ -8,6 +8,14 @@ class_name DialogueData
 	"Outline": Color("#000000")
 }
 
+@export var music_tracks: Dictionary = {
+	
+}
+
+@export var strings: Dictionary = {
+	"MusicBus": "Master"
+}
+
 @export var fonts: Dictionary = {
 	
 }
@@ -30,6 +38,8 @@ class_name DialogueData
 	# Audio
 	"AudioPitchMin": 0.9,
 	"AudioPitchMax": 1.1,
+	"MusicBaseVolume": -10.0,
+	"MusicDefaultFadeDuration": 1.0,
 	# Effects
 	"RippleStrengthMultiplier": 0.4,
 	"DefaultJitterIntensity": 2,
@@ -70,4 +80,9 @@ func get_integer(int_key: String, default_value: int = 0) -> int:
 func get_float(int_key: String, default_value: float = 0.0) -> float:
 	if int_key in integers:
 		return float(integers[int_key])
+	return default_value
+
+func get_string(string_key: String, default_value: String = "") -> String:
+	if string_key in strings:
+		return strings[string_key]
 	return default_value

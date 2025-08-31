@@ -1,4 +1,4 @@
-[a'entrance']
+[a'entrance'] [m'main']
 [a'idle']This is a test Dialogue <>
 [a'confused', !24, @10{]Woah![}] this is [a'angry']really something [] <>
 [a'idle', !24{]This is wavy text[}#400] now slower [#250] and super slow words [$60]

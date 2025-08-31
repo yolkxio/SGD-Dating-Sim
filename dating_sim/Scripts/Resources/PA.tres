@@ -6,11 +6,11 @@
 [ext_resource type="Texture2D" uid="uid://jsbpfqlxykho" path="res://Assets/Art/Characters/PA/dummy-confuse.PNG" id="3_amcte"]
 [ext_resource type="Texture2D" uid="uid://nnewv5b760uq" path="res://Assets/Art/Characters/PA/dummy-confuse-talk.PNG" id="4_4juaj"]
 [ext_resource type="Texture2D" uid="uid://du5wye68vujv" path="res://Assets/Art/Characters/PA/dummy-angry.PNG" id="5_y86ds"]
-[ext_resource type="AudioStream" uid="uid://cfk0hp41oartf" path="res://Assets/Sounds/blipSelect (2).wav" id="5_yd68a"]
 [ext_resource type="Texture2D" uid="uid://c6fb62kqg4qpt" path="res://Assets/Art/Characters/PA/dummy-angry-talk.PNG" id="6_yxcug"]
 [ext_resource type="Texture2D" uid="uid://c3saov08a4trq" path="res://Assets/Art/Characters/PA/dummy-entrance.PNG" id="7_7voqb"]
 [ext_resource type="Texture2D" uid="uid://df5qxmqs6atbf" path="res://Demo/Assets/Art/scooter-asset.png" id="8_amcte"]
 [ext_resource type="AudioStream" uid="uid://ihtq5vgr061r" path="res://Demo/Assets/Audio/bell.mp3" id="10_4juaj"]
+[ext_resource type="AudioStream" uid="uid://cfk0hp41oartf" path="res://Assets/Sounds/normal/blipSelect (2).wav" id="10_amcte"]
 
 [resource]
 script = ExtResource("1_xq1q5")
@@ -26,7 +26,7 @@ character_images = {
 }
 character_sounds = {
 "bell": ExtResource("10_4juaj"),
-"talking": ExtResource("5_yd68a")
+"talking": ExtResource("10_amcte")
 }
 character_variables = {
 "will talk": true
