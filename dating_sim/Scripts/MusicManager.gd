@@ -29,11 +29,9 @@ func setup_audio_players():
 	fade_music_player.bus = dialogue_data.get_string("MusicBus", "Master")
 
 func set_music_library(music_dict: Dictionary):
-	"""Set the dictionary of available music tracks"""
 	music_library = music_dict
 
 func play_music(track_key: String, fade_duration: float = -1):
-	"""Play a music track with optional fade in"""
 	if fade_duration == -1:
 		fade_duration = dialogue_data.get_float("MusicDefaultFadeDuration", 1.0)
 	
@@ -45,15 +43,12 @@ func play_music(track_key: String, fade_duration: float = -1):
 		return
 	
 	if not music_library.has(track_key):
-		print("Warning: Music track not found: ", track_key)
 		return
 	
 	var new_stream = music_library[track_key]
 	if not new_stream:
-		print("Warning: Invalid music stream for: ", track_key)
 		return
 	
-	print("MusicManager: Playing track: ", track_key, " with stream: ", new_stream)
 	current_track_key = track_key
 	
 	if current_music_player.playing and fade_duration > 0:
@@ -94,7 +89,6 @@ func crossfade_to_track(new_stream: AudioStream, fade_duration: float):
 	music_fade_completed.emit()
 
 func stop_music(fade_duration: float = -1):
-	"""Stop current music with optional fade out"""
 	if fade_duration == -1:
 		fade_duration = dialogue_data.get_float("MusicDefaultFadeDuration", 1.0)
 	
@@ -117,7 +111,6 @@ func stop_music(fade_duration: float = -1):
 		current_music_player.stop()
 
 func set_music_volume(volume_db: float, fade_duration: float = 0.0):
-	"""Change music volume with optional fade"""
 	if fade_duration > 0:
 		if fade_tween:
 			fade_tween.kill()
@@ -127,21 +120,16 @@ func set_music_volume(volume_db: float, fade_duration: float = 0.0):
 		current_music_player.volume_db = volume_db
 
 func pause_music():
-	"""Pause current music"""
 	current_music_player.stream_paused = true
 
 func resume_music():
-	"""Resume paused music"""
 	current_music_player.stream_paused = false
 
 func is_music_playing() -> bool:
-	"""Check if music is currently playing"""
 	return current_music_player.playing and not current_music_player.stream_paused
 
 func get_current_track() -> String:
-	"""Get the key of the currently playing track"""
 	return current_track_key
 
 func is_music_fading() -> bool:
-	"""Check if music is currently fading"""
 	return is_fading

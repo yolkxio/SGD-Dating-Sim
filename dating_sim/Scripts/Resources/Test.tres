@@ -14,6 +14,9 @@ colors = {
 music_tracks = {
 "main": ExtResource("1_nkns5")
 }
+strings = {
+"MusicBus": "Master"
+}
 fonts = {}
 integers = {
 "AddedSpacing": 0,
