@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://cs4cn4epg4x8o"]
+[gd_scene load_steps=3 format=3 uid="uid://cs4cn4epg4x8o"]
 
 [ext_resource type="PackedScene" uid="uid://cuysm2kox8jt8" path="res://Scenes/Screen.tscn" id="1_dichd"]
+[ext_resource type="Resource" uid="uid://bwv4c7dooopqe" path="res://Demo/Demo.tres" id="2_hdj7n"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -12,5 +13,6 @@ grow_vertical = 2
 
 [node name="Screen" parent="." instance=ExtResource("1_dichd")]
 layout_mode = 1
+character_data = ExtResource("2_hdj7n")
 
 [editable path="Screen"]

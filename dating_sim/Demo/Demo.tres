@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=3 format=3 uid="uid://bwv4c7dooopqe"]
+
+[ext_resource type="AudioStream" uid="uid://ihtq5vgr061r" path="res://Demo/Assets/Audio/bell.mp3" id="1_dcbse"]
+[ext_resource type="Script" uid="uid://bhirb0q308e7m" path="res://Scripts/Classes/CharacterBase.gd" id="1_qex4v"]
+
+[resource]
+script = ExtResource("1_qex4v")
+character_name = "Demo"
+character_id = "DM"
+dialogue_text_files = Array[String](["res://Demo/Assets/Dialogue/Demo_Intro.txt", "res://Demo/Assets/Dialogue/Demo_A.txt", "res://Demo/Assets/Dialogue/Demo_B.txt", "res://Demo/Assets/Dialogue/Demo_AB.txt"])
+character_images = {}
+character_sounds = {
+"bell": ExtResource("1_dcbse")
+}
+character_variables = {
+"will talk": true
+}
+metadata/_custom_type_script = "uid://bhirb0q308e7m"

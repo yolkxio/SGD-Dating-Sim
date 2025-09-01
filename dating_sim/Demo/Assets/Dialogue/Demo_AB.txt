@@ -1,0 +1,11 @@
+# display sprite of the president (1 png) <>
+(Before you can step into the classroom, a man appears in front of you, blocking your path) <>
+Oh my gosh, it’s the ex-Gamerversity President, LinkedIN Ryan! (Alissa please come up with a better name) <>
+Pres: Hey, you. I need you to pick one of these eligible single students and win over their affections. <>
+# Display 3 random character sprites tbd <>
+Um... [] What? <>
+Pres: Please! It’s for college credits, don’t you want to graduate and get a job? <>
+(Damn... [] You do want a job... That’s literally why you’re here...) <>
+(You look at the 3 gorgeous people in front of you… BUT IS THIS REALLY THE ONLY WAY TO GET A JOB HERE?!) <>
+Is this really worth it? Who.. Who would I even choose?! <>
+#text effect: To be continued...

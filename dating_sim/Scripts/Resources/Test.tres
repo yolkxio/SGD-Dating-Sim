@@ -5,7 +5,7 @@
 
 [resource]
 script = ExtResource("1_2lc6c")
-text_file_path = "res://Assets/Text/Test Dialogue.txt"
+text_file_path = "res://Demo/Assets/Dialogue/Demo_Intro.txt"
 colors = {
 "Background": Color(0.323217, 0.696396, 0.664142, 1),
 "Outline": Color(0, 0, 0, 1),

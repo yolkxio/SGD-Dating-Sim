@@ -1,6 +1,11 @@
-res://Scenes/Screen.tscn
+res://Demo/Demo.tscn
 res://Themes/TestTheme.tres
 res://Scripts/Resources/Test.tres
-res://Demo/Demo.tscn
-res://Scripts/BackgroundManager.gd
-res://Scripts/MusicManager.gd
+res://Demo/Demo.tres
+res://Demo/Assets/Dialogue/Demo_Intro.txt
+res://Demo/Assets/Dialogue/Demo_A.txt
+res://Demo/Assets/Dialogue/Demo_AB.txt
+res://Demo/Assets/Dialogue/Demo_B.txt
+res://Scenes/Screen.tscn
+res://Scenes/ProgrammerArthony.tscn
+res://Scripts/Resources/PA.tres
