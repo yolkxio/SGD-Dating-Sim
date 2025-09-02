@@ -135,8 +135,6 @@ func parse_text(content: String):
 	current_segment_index = 0
 	var raw_segments = content.split("<>")
 	
-	print("Raw segments found: ", raw_segments.size())
-	
 	var i = 0
 	while i < raw_segments.size():
 		var current_segment = raw_segments[i].strip_edges()
@@ -174,8 +172,6 @@ func parse_text(content: String):
 			var parsed_data = effects_manager.find_effects(current_segment)
 			full_dialogue_segments.append(parsed_data)
 			i += 1
-	
-	print("Final parsed segments: ", full_dialogue_segments.size())
 
 func jump(file_index: int):
 	
@@ -216,7 +212,6 @@ func create_choice_data(choice_options_text: Array) -> Dictionary:
 	}
 
 func start_next():
-	print("=== START_NEXT CALLED ===")
 	
 	if current_segment_index >= full_dialogue_segments.size():
 		return
@@ -237,7 +232,6 @@ func start_next():
 	
 	# PRE-PROCESS: Split text into render segments based on effects
 	split_into_render_segments()
-	print("Split complete, segments: ", render_segments.size())
 	
 	# Initialize text manager
 	text_manager.prepare_segment(current_segment_text, current_segment_effects)
@@ -296,7 +290,6 @@ func split_into_render_segments():
 		if i < effect_positions.size() - 1:  # Don't process the end marker
 			for effect in current_segment_effects:
 				if effect.position == end_pos:
-					print("Applying effect at position ", end_pos, ": ", effect)
 					match effect.get("type", "permanent"):
 						"start_zone":
 							in_zone = true
@@ -313,10 +306,8 @@ func split_into_render_segments():
 		current_pos = end_pos
 	
 	render_segments = segments
-	print("Total render segments created: ", render_segments.size())
 
 func render_next_segment():
-	print("=== RENDER_NEXT_SEGMENT ===")
 	
 	if current_render_index >= render_segments.size():
 		finish_current()
@@ -354,7 +345,6 @@ func typing_speed():
 		typing_timer.wait_time = (fps / effective_word_speed)
 
 func switch_rendering_mode(new_word_mode: bool, char_pos: int = -1):
-	print("switch_rendering_mode called: new_word_mode=", new_word_mode, " char_pos=", char_pos)
 	
 	# Prevent infinite loops
 	if is_switching_modes:
@@ -380,7 +370,6 @@ func check_for_super_pause(position: int) -> bool:
 	return false
 
 func _render_timer():
-	print("=== RENDER_TIMER CALLED ===")
 	
 	if character_manager.is_entrance_active():
 		return
@@ -418,7 +407,6 @@ func _render_timer():
 	
 	# Check if current segment is done
 	if not has_more or text_manager.get_current_position() >= segment.end_pos:
-		print("Segment complete, advancing...")
 		current_render_index += 1
 		typing_timer.stop()
 		
@@ -459,7 +447,6 @@ func apply_position_effects(position: int):
 			var music_key = effect_change.effects.get("music_change", "")
 			if music_key != "":
 				var fade_duration = effect_change.effects.get("music_fade_duration", -1.0)
-				print("TestText: apply_position_effects - Playing music: '", music_key, "' with fade: ", fade_duration)
 				music_manager.play_music(music_key, fade_duration)
 			
 			var music_volume = effect_change.effects.get("music_volume", 999.0)
@@ -537,16 +524,12 @@ func get_active_effects_at_position(char_pos: int) -> Dictionary:
 					for key in active_effects.keys():
 						if effect_change.effects.has(key):
 							active_effects[key] = effect_change.effects[key]
-					print("    PERMANENT: ", effect_change.effects)
 	
 	# Apply zone effects if we're in a zone
 	if in_zone:
-		print("  IN ZONE, applying: ", zone_effects)
 		for key in active_effects.keys():
 			if zone_effects.has(key):
 				active_effects[key] = zone_effects[key]
-	else:
-		print("  NOT IN ZONE")
 	return active_effects
 
 func play_background_music(track_key: String, fade_duration: float = -1):
@@ -626,11 +609,7 @@ func finish_current():
 func next():
 	if not waiting_for_input:
 		return
-	
-	print("next() called, current_segment_index: ", current_segment_index, " total segments: ", full_dialogue_segments.size())
-	
 	text_manager.clear_all_text()
-	
 	current_segment_index += 1
 	start_next()
 
