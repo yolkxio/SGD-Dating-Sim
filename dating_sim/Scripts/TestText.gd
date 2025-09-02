@@ -177,6 +177,17 @@ func parse_text(content: String):
 	
 	print("Final parsed segments: ", full_dialogue_segments.size())
 
+func jump(file_index: int):
+	
+	if file_index >= 0 and file_index < character_data.dialogue_text_files.size():
+		var new_file_path = character_data.dialogue_text_files[file_index]
+		dialogue_data.text_file_path = new_file_path
+		typing_timer.stop()
+		is_typing = false
+		waiting_for_input = false
+		text_manager.clear_all_text()
+		load_text()
+
 func create_choice_data(choice_options_text: Array) -> Dictionary:
 	choice_options.clear()
 	choice_destinations.clear()
@@ -460,6 +471,11 @@ func apply_position_effects(position: int):
 			if music_stop:
 				var fade_duration = effect_change.effects.get("music_fade_duration", -1.0)
 				music_manager.stop_music(fade_duration)
+			
+			var jump_to = effect_change.effects.get("jump", -1)
+			if jump_to >= 0:
+				jump(jump_to)
+				return
 	
 	if segment.is_word_mode:
 		var word_start = previous_pos

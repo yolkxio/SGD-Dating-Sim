@@ -112,7 +112,8 @@ func parse_effects(effect_str: String) -> Dictionary:
 		"music_change": "",
 		"music_fade_duration": -1.0,
 		"music_volume": 999.0,
-		"music_stop": false
+		"music_stop": false,
+		"jump": -1,
 	}
 	
 	var effect_parts = effect_str.split(",")
@@ -126,7 +127,11 @@ func parse_effects(effect_str: String) -> Dictionary:
 	return effects
 
 func start_effects(effect_str: String, effects: Dictionary):
-	if effect_str.begins_with("!"):
+	if effect_str.begins_with("j"):
+		var number_str = effect_str.substr(1)
+		var jindex = number_str.to_int()
+		effects["jump"] = jindex
+	elif effect_str.begins_with("!"):
 		var number_str = effect_str.substr(1)
 		var ripple_value = number_str.to_int()
 		effects["ripple"] = ripple_value
