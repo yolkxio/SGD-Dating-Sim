@@ -1,4 +1,6 @@
-# Display image of ebike
-
-(You take the rental scooter to class, only amassing 7 injured pedestrians and narrowly avoiding a mouthful of pavement staying away from the curb.) <>
-(You are only 5 minutes late to class. Great Success! YIP[j3]- <>
+alright! [>'scooter']scooter go! <>
+(You take the rental scooter to class, only hitting 7 pedestrians 
+and narrowly avoiding a mouthful of pavement after swerving in front
+of a car.) <>
+(You are only 5 minutes late to class.[] Great Success!) <>
+[j3]- <>

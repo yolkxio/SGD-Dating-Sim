@@ -1,13 +1,12 @@
-(Wow, look at you... In a video game... So peaceful and asleep. Dreaming 
+[a'sleep'](Wow, look at you... In a video game... So peaceful and asleep. Dreaming 
 of the awesome video games you can make.) <>
 (But isn’t there something you need to be getting ready for right now…?) <>
-[<'bell']Riiinnngg! (sorry its so loud guys) <>
-Oh no! It’s the classic high school bell that the university has for some 
+[<'bell'][!30, @10 {]Riiinnngg!!![}][@2] (sorry its so loud guys) <>
+[a'gadzooks']Oh no! It’s the classic high school bell that the university has for some 
 reason! I’m going to be late for my first day of... <>
-GAMERVERSITY!!!    # text effect here (but also oh my god that may just be the
-worst name i could ever come up with <>
+[%1,^60,&5, @10{]GAMERVERSITY!!![}] <>
 (You jump out of bed and throw on whatever clothes you can find, running to 
 the bathroom to beat a new record for your fastest prep time yet.) <>
-[:] Help!! How should I get to class? <> 
+[:] [@2]Help!! How should I get to class? <> 
 An E-Scooter [:1] <>
 The CAT (C'Ville Area Transit) [:2] <>
