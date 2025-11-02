@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bv2rgv5i3toyf"
+path="res://.godot/imported/Holy let me in the kitchen more_finished.wav-6bce7455992de25972a758b3e5596b13.sample"
+
+[deps]
+
+source_file="res://Assets/Sounds/music/Holy let me in the kitchen more_finished.wav"
+dest_files=["res://.godot/imported/Holy let me in the kitchen more_finished.wav-6bce7455992de25972a758b3e5596b13.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2
